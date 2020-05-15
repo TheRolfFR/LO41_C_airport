@@ -67,5 +67,7 @@ char* destinations_inter[NB_DESTINATIONS_INTER] = {
 #define AJOUT_HORAIRE_SEC_MIN 3
 #define AJOUT_HORAIRE_SEC_MAX 8
 
+#define MISE_EN_ATTENTE_FUEL 5
+
 
 #endif //LO41_PROJET_CONSTANTES_H
