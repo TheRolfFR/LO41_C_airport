@@ -9,6 +9,7 @@
 #include "choisirDestination.h"
 #include "../utilitaires/aleatoire.h"
 #include "../constantes.h"
+#include "../utilitaires/date.h"
 
 // fonction lancée quand on veut créer un nouvel avion aléatoire
 avion* creerAvion() {
@@ -22,10 +23,16 @@ avion* creerAvion() {
     // on génère une quantité aléatoire de fuel entre FUEL_MIN et FUEL_MAX
     resultat->fuel = aleatoireEntierRange(FUEL_MIN, FUEL_MAX);
 
+    // on se demande si c'est un gros avion
+    resultat->grosAvion = aleatoireFloatRange(0, 1, 3) <= PROBA_GROS_AVION;
+
     //atterissage d'urgence
     if(aleatoireFloatRange(0, 1, 3) <= PROBA_ATTERISSAGE_FORCE) {
         resultat->atterissageUrgent = true;
     }
+
+    // date d'atterissage
+    mettreDate(resultat);
 
     return resultat;
 }

@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include "avion.h"
+#include "../utilitaires/date.h"
 
 void afficherAvion(avion* a) {
     // départ ou arrivée
@@ -17,13 +18,19 @@ void afficherAvion(avion* a) {
     }
 
     // lieu
-    printf(" %20s", a->lieu);
+    printf(" %16s", a->lieu);
 
     // fuel
-    printf(" %3d", a->fuel);
+    printf(" Fuel:%3d", a->fuel);
+
+    // gros avion
+    printf(" G:%d", a->grosAvion);
 
     // atterissage urgent
-    printf(" %d\n", a->atterissageUrgent);
+    printf(" AF:%d\n", a->atterissageUrgent);
+
+    // date
+    afficherDate(a->date);printf("\n");
 }
 
 #endif //LO41_PROJET_AFICHERAVION_H

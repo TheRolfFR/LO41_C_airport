@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="ini" pattern="file[lo41-projet]:*.ini" />
+</component>

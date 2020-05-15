@@ -6,6 +6,7 @@
 #define LO41_PROJET_AVION_H
 
 #include <stdbool.h>
+#include <time.h>
 
 typedef struct struct_avion {
     char *lieu;
@@ -13,6 +14,7 @@ typedef struct struct_avion {
     int fuel;
     bool grosAvion;
     bool atterissageUrgent;
+    struct tm *date;
 } avion;
 
 #endif //LO41_PROJET_AVION_H

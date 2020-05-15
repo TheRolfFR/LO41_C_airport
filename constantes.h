@@ -60,7 +60,12 @@ char* destinations_inter[NB_DESTINATIONS_INTER] = {
 #define FUEL_MIN 100
 #define FUEL_MAX 800
 
+#define PROBA_GROS_AVION 0.4
+
 #define PROBA_ATTERISSAGE_FORCE 0.1
+
+#define AJOUT_HORAIRE_SEC_MIN 3
+#define AJOUT_HORAIRE_SEC_MAX 8
 
 
 #endif //LO41_PROJET_CONSTANTES_H
