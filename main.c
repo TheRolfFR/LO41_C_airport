@@ -66,5 +66,13 @@ int main (void) {
     affichageClean(&aff);
     afficherLoader(&loader);
     affichageWrite(&aff, "Je suis chargé.\n");
+
+    sleep(1);
+
+    // comment afficher une erreur
+    changerEtatLoader(&loader, LOADER_ERREUR);
+    afficherLoader(&loader);
+    affichageWrite(&aff, "Ceci est une erreur.\n");
+
     return 0;
 }

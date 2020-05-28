@@ -13,7 +13,8 @@
 typedef enum enum_etat_loader {
     LOADER_PAS_CHARGE,
     LOADER_CHARGEMENT,
-    LOADER_TERMINE
+    LOADER_TERMINE,
+    LOADER_ERREUR
 } etat_loader;
 
 const char loader_caractere_pas_charge = '_';
@@ -27,6 +28,8 @@ const char loader_caracteres_chargement[ETAPES_CHARGEMENT] = {
 };
 
 const char loader_caractere_termine = 'V';
+
+const char loader_caractere_erreur = 'E';
 
 typedef struct s_loader {
     etat_loader etat; // etat du loader
@@ -48,6 +51,9 @@ int changerEtatLoader(loader_struct *loader, etat_loader nouvelEtat) {
             break;
         case LOADER_TERMINE:
             loader->caractere = loader_caractere_termine;
+            break;
+        case LOADER_ERREUR:
+            loader->caractere = loader_caractere_erreur;
             break;
         default:
             loader->caractere = loader_caractere_pas_charge;
@@ -96,6 +102,11 @@ void afficherLoader(loader_struct *loader) {
             break;
         case LOADER_TERMINE:
             printf("" KGRN);
+            affichageWrite(&loader->affichage, " %c ", loader->caractere);
+            printf("" KNRM);
+            break;
+        case LOADER_ERREUR:
+            printf("" KRED);
             affichageWrite(&loader->affichage, " %c ", loader->caractere);
             printf("" KNRM);
             break;
