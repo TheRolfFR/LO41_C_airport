@@ -49,6 +49,7 @@ int loaderChangerEtat(loader_struct *loader, etat_loader nouvelEtat) {
     switch (nouvelEtat) {
         case LOADER_CHARGEMENT:
             loader->caractere = loader_caracteres_chargement[0];
+            loader->offset_caractere = 0;
             break;
         case LOADER_TERMINE:
             loader->caractere = loader_caractere_termine;
@@ -60,6 +61,18 @@ int loaderChangerEtat(loader_struct *loader, etat_loader nouvelEtat) {
             loader->caractere = loader_caractere_pas_charge;
             break;
     }
+}
+
+int loaderInitialiser(loader_struct *loader) {
+    if(loader == NULL)
+        return EXIT_FAILURE;
+
+    loaderChangerEtat(loader, LOADER_PAS_CHARGE);
+
+    loader->offset_caractere = 0;
+    loader->vitesse = 0;
+
+    affichageInitialiser(&loader->affichage);
 }
 
 /// Permet de changer le caractere lors du chargement
@@ -118,6 +131,24 @@ void loaderAfficher(loader_struct *loader) {
 }
 
 void loaderAfficherTexte(loader_struct *loader, char *format, ...) {
+    affichageClean(&(loader->affichage));
+
+    loaderAfficher(loader);
+    int x, y;
+    trouverOffset(&(loader->affichage), &x, &y);
+
+    // extract args
+    va_list args;
+    va_start(args, format);
+    // afficher avec de l'offset
+    affichageWriteOffsetVa(&(loader->affichage), x + 3, y, format, args);
+    // end args
+    va_end(args);
+}
+
+void loaderAfficherTexteEtat(loader_struct *loader, etat_loader nouvelEtat, char *format, ...) {
+    loaderChangerEtat(loader, nouvelEtat);
+
     affichageClean(&(loader->affichage));
 
     loaderAfficher(loader);

@@ -32,15 +32,13 @@ int main (void) {
     loader_struct loader;
 
     // initialize affichage
-    affichageInitialiser(&loader.affichage);
+    loaderInitialiser(&loader);
     affichageInitialiser(&deuxieme_ligne);
 
-    loader.affichage.hauteur = 1;
-    loader.affichage.margeBas = 2;
     ajouterAffichage(&liste, &loader.affichage);
     ajouterAffichage(&liste, &deuxieme_ligne);
 
-    loaderChangerEtat(&loader, LOADER_PAS_CHARGE);
+    loaderAfficherTexteEtat(&loader, LOADER_PAS_CHARGE, "Je ne suis pas chargé.");
 
     affichagePrintf(&deuxieme_ligne, "Je suis une seconde ligne");
 
@@ -55,15 +53,12 @@ int main (void) {
         ++i;
     }
 
-    loaderChangerEtat(&loader, LOADER_TERMINE);
-
-    loaderAfficherTexte(&loader, "Je suis chargé.\n");
+    loaderAfficherTexteEtat(&loader, LOADER_TERMINE, "Je suis chargé.\n");
 
     sleep(1);
 
     // comment afficher une erreur
-    loaderChangerEtat(&loader, LOADER_ERREUR);
-    loaderAfficherTexte(&loader, "Ceci est une erreur.\n");
+    loaderAfficherTexteEtat(&loader, LOADER_ERREUR, "Ceci est une erreur.\n");
 
     return 0;
 }

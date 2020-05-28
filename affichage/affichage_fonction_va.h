@@ -14,6 +14,9 @@ void affichageWriteOffsetVa(affichage_struct *affichage, int offsetX, int offset
 
     // print body
     vfprintf(stdout, format, args);
+
+    // flush stdout
+    fflush(stdout);
 }
 
 #endif //LO41_PROJET_AFFICHAGE_FONCTION_VA_H
