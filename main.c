@@ -40,30 +40,30 @@ int main (void) {
     ajouterAffichage(&liste, &loader.affichage);
     ajouterAffichage(&liste, &deuxieme_ligne);
 
-    changerEtatLoader(&loader, LOADER_PAS_CHARGE);
+    loaderChangerEtat(&loader, LOADER_PAS_CHARGE);
 
     affichagePrintf(&deuxieme_ligne, "Je suis une seconde ligne");
 
     sleep(1);
 
-    changerEtatLoader(&loader, LOADER_CHARGEMENT);
+    loaderChangerEtat(&loader, LOADER_CHARGEMENT);
     int i = 0;
     while(i < MAX_ROTATIONS) {
-        afficherLoaderTexte(&loader, "Je suis en train de charger : %d/%d\n", i+1, MAX_ROTATIONS);
+        loaderAfficherTexte(&loader, "Je suis en train de charger : %d/%d\n", i + 1, MAX_ROTATIONS);
         usleep(75000);
-        updateCaractere(&loader);
+        loaderUpdateCaractere(&loader);
         ++i;
     }
 
-    changerEtatLoader(&loader, LOADER_TERMINE);
+    loaderChangerEtat(&loader, LOADER_TERMINE);
 
-    afficherLoaderTexte(&loader, "Je suis chargé.\n");
+    loaderAfficherTexte(&loader, "Je suis chargé.\n");
 
     sleep(1);
 
     // comment afficher une erreur
-    changerEtatLoader(&loader, LOADER_ERREUR);
-    afficherLoaderTexte(&loader, "Ceci est une erreur.\n");
+    loaderChangerEtat(&loader, LOADER_ERREUR);
+    loaderAfficherTexte(&loader, "Ceci est une erreur.\n");
 
     return 0;
 }

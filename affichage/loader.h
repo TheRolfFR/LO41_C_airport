@@ -43,7 +43,7 @@ typedef struct s_loader {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
 
-int changerEtatLoader(loader_struct *loader, etat_loader nouvelEtat) {
+int loaderChangerEtat(loader_struct *loader, etat_loader nouvelEtat) {
     loader->etat = nouvelEtat;
 
     switch (nouvelEtat) {
@@ -64,7 +64,7 @@ int changerEtatLoader(loader_struct *loader, etat_loader nouvelEtat) {
 
 /// Permet de changer le caractere lors du chargement
 /// \param loader le loader affecté
-void updateCaractere(loader_struct* loader) {
+void loaderUpdateCaractere(loader_struct* loader) {
     if(loader->etat == LOADER_CHARGEMENT) {
         unsigned int offset = loader->offset_caractere;
         offset = (offset + 1) % ETAPES_CHARGEMENT;
@@ -73,7 +73,7 @@ void updateCaractere(loader_struct* loader) {
     }
 }
 
-int ajouterMargeLoader(affichage_struct *affichage) {
+int loaderAjouterMarge(affichage_struct *affichage) {
     if(affichage == NULL)
         return EXIT_FAILURE;
 
@@ -82,7 +82,7 @@ int ajouterMargeLoader(affichage_struct *affichage) {
     return EXIT_SUCCESS;
 }
 
-int enleverMargeLoader(affichage_struct *affichage) {
+int loaderEnleverMarge(affichage_struct *affichage) {
     if(affichage == NULL || affichage->margeGauche < 3)
         return EXIT_FAILURE;
 
@@ -94,7 +94,7 @@ int enleverMargeLoader(affichage_struct *affichage) {
 /// Affiche le loader dans un affichage
 /// \param affichage place dans l'affichage
 /// \param loader loader concerné
-void afficherLoader(loader_struct *loader) {
+void loaderAfficher(loader_struct *loader) {
     switch (loader->etat) {
         case LOADER_CHARGEMENT:
             printf("" KYEL);
@@ -117,10 +117,10 @@ void afficherLoader(loader_struct *loader) {
     }
 }
 
-void afficherLoaderTexte(loader_struct *loader, char *format, ...) {
+void loaderAfficherTexte(loader_struct *loader, char *format, ...) {
     affichageClean(&(loader->affichage));
 
-    afficherLoader(loader);
+    loaderAfficher(loader);
     int x, y;
     trouverOffset(&(loader->affichage), &x, &y);
 
