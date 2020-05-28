@@ -7,6 +7,7 @@
 
 #include "affichage_struct.h"
 #include "affichage_fonction.h"
+#include "affichage_fonction_va.h"
 #include "../utilitaires/couleurs.h"
 
 
@@ -114,6 +115,22 @@ void afficherLoader(loader_struct *loader) {
             affichageWrite(&loader->affichage, " %c ", loader->caractere);
             break;
     }
+}
+
+void afficherLoaderTexte(loader_struct *loader, char *format, ...) {
+    affichageClean(&(loader->affichage));
+
+    afficherLoader(loader);
+    int x, y;
+    trouverOffset(&(loader->affichage), &x, &y);
+
+    // extract args
+    va_list args;
+    va_start(args, format);
+    // afficher avec de l'offset
+    affichageWriteOffsetVa(&(loader->affichage), x + 3, y, format, args);
+    // end args
+    va_end(args);
 }
 
 #pragma clang diagnostic pop

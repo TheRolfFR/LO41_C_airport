@@ -106,34 +106,6 @@ void affichageClean(affichage_struct* affichage) {
     }
 }
 
-void affichageWrite(affichage_struct* affichage, char* format, ...) {
-    int x, y;
-    trouverOffset(affichage, &x, &y);
-
-    // setting position
-    printf("\033[%d;%dH", y, x);
-
-    // extract args
-    va_list args;
-    va_start(args, format);
-    // print body
-    vfprintf(stdout, format, args);
-    // end args
-    va_end(args);
-}
-
-void affichagePrintf(affichage_struct* affichage, char* format, ...) {
-    affichageClean(affichage);
-
-    // extract args
-    va_list args;
-    va_start(args, format);
-
-    affichageWrite(affichage, format, args);
-    // end args
-    va_end(args);
-}
-
 int affichage_dupliquer(affichage_struct *source, affichage_struct *destination) {
     if(source == NULL && destination == NULL)
         return EXIT_FAILURE;

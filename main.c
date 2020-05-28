@@ -8,8 +8,11 @@
 #include "avion/creerAvion.h"
 #include "avion/aficherAvion.h"
 #include "affichage/affichage_fonction.h"
+#include "affichage/affichage_fonction_variable.h"
 #include "affichage/loader.h"
 #include "constantes.h"
+
+#define MAX_ROTATIONS 42
 
 int main (void) {
     initAleatoire(); // on initialise l'aléatoire
@@ -29,22 +32,15 @@ int main (void) {
     loader_struct loader;
 
     // initialize affichage
-    affichageInitialiser(&aff);
-    affichageInitialiser(&deuxieme_ligne);
     affichageInitialiser(&loader.affichage);
+    affichageInitialiser(&deuxieme_ligne);
 
-    aff.hauteur = 1;
-    aff.margeBas = 2;
-    ajouterAffichage(&liste, &aff);
+    loader.affichage.hauteur = 1;
+    loader.affichage.margeBas = 2;
+    ajouterAffichage(&liste, &loader.affichage);
     ajouterAffichage(&liste, &deuxieme_ligne);
 
-    affichage_dupliquer(&aff, &(loader.affichage));
-    ajouterMargeLoader(&aff);
     changerEtatLoader(&loader, LOADER_PAS_CHARGE);
-
-    affichageClean(&aff);
-    afficherLoader(&loader);
-    affichageWrite(&aff, "Je ne charge pas.\n");
 
     affichagePrintf(&deuxieme_ligne, "Je suis une seconde ligne");
 
@@ -52,10 +48,8 @@ int main (void) {
 
     changerEtatLoader(&loader, LOADER_CHARGEMENT);
     int i = 0;
-    while(i < 42) {
-        affichageClean(&aff);
-        afficherLoader(&loader);
-        affichageWrite(&aff,"Je suis en train de charger : %d/8\n", i+1);
+    while(i < MAX_ROTATIONS) {
+        afficherLoaderTexte(&loader, "Je suis en train de charger : %d/%d\n", i+1, MAX_ROTATIONS);
         usleep(75000);
         updateCaractere(&loader);
         ++i;
@@ -63,16 +57,13 @@ int main (void) {
 
     changerEtatLoader(&loader, LOADER_TERMINE);
 
-    affichageClean(&aff);
-    afficherLoader(&loader);
-    affichageWrite(&aff, "Je suis chargé.\n");
+    afficherLoaderTexte(&loader, "Je suis chargé.\n");
 
     sleep(1);
 
     // comment afficher une erreur
     changerEtatLoader(&loader, LOADER_ERREUR);
-    afficherLoader(&loader);
-    affichageWrite(&aff, "Ceci est une erreur.\n");
+    afficherLoaderTexte(&loader, "Ceci est une erreur.\n");
 
     return 0;
 }
