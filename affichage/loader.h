@@ -33,6 +33,7 @@ typedef struct s_loader {
     unsigned int offset_caractere; // offset (loader_caracteres_chargement)
     char caractere; // caractère actuel
     int vitesse; // en secondes
+    affichage_struct affichage;
 } loader_struct;
 
 #pragma clang diagnostic push
@@ -86,20 +87,20 @@ int enleverMargeLoader(affichage_struct *affichage) {
 /// Affiche le loader dans un affichage
 /// \param affichage place dans l'affichage
 /// \param loader loader concerné
-void afficherLoader(affichage_struct *affichage, loader_struct* loader) {
+void afficherLoader(loader_struct *loader) {
     switch (loader->etat) {
         case LOADER_CHARGEMENT:
             printf("" KYEL);
-            affichageWrite(affichage, " %c", loader->caractere);
+            affichageWrite(&loader->affichage, " %c", loader->caractere);
             printf("" KNRM);
             break;
         case LOADER_TERMINE:
             printf("" KGRN);
-            affichageWrite(affichage, " %c ", loader->caractere);
+            affichageWrite(&loader->affichage, " %c ", loader->caractere);
             printf("" KNRM);
             break;
         default:
-            affichageWrite(affichage, " %c ", loader->caractere);
+            affichageWrite(&loader->affichage, " %c ", loader->caractere);
             break;
     }
 }
