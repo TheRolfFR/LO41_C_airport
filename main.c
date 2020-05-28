@@ -42,23 +42,26 @@ int main (void) {
     changerEtatLoader(&loader, LOADER_PAS_CHARGE);
 
     affichageClean(&aff);
-    afficherLoader(&aff, &loader);
+    afficherLoader(&loader_aff, &loader);
     affichageWrite(&aff, "Je ne charge pas.\n");
+
+    sleep(1);
 
     changerEtatLoader(&loader, LOADER_CHARGEMENT);
     int i = 0;
-    while(i < 8) {
+    while(i < 42) {
         affichageClean(&aff);
-        afficherLoader(&aff, &loader);
+        afficherLoader(&loader_aff, &loader);
         affichageWrite(&aff,"Je suis en train de charger : %d/8\n", i+1);
-        sleep(1);
+        usleep(250000);
         updateCaractere(&loader);
         ++i;
     }
 
     changerEtatLoader(&loader, LOADER_TERMINE);
-    affichagePrintf(&aff, "Je suis chargé.\n");
-    sleep(2);
-    afficherLoader(&aff, &loader);
+
+    affichageClean(&aff);
+    afficherLoader(&loader_aff, &loader);
+    affichageWrite(&aff, "Je suis chargé.\n");
     return 0;
 }
