@@ -10,17 +10,33 @@
 #include <stdarg.h>
 #include "affichage_struct.h"
 
-int ajouterAffichage(affichage_struct* affichage) {
+int affichageInitialiser(affichage_struct *affichage) {
+    if(affichage == NULL)
+        return EXIT_FAILURE;
+
+    affichage->margeHaut = 0;
+    affichage->margeGauche = 0;
+    affichage->hauteur = 1;
+    affichage->margeBas = 0;
+
+    affichage->precedent = NULL;
+    affichage->suivant = NULL;
+
+    return EXIT_SUCCESS;
+}
+
+int ajouterAffichage(affichage_struct *liste, affichage_struct *affichage) {
+
     if(affichage == NULL)
         return EXIT_FAILURE;
 
 
-    if (listeAffichage == NULL) {
-        listeAffichage = affichage;
+    if (liste == NULL) {
+        liste = affichage;
         return EXIT_SUCCESS;
     }
 
-    affichage_struct *affichageActuel = listeAffichage;
+    affichage_struct *affichageActuel = liste;
     while (affichageActuel->suivant != NULL) {
         affichageActuel = affichageActuel->suivant;
     }
@@ -47,11 +63,24 @@ int supprimerAffichage(affichage_struct* affichage) {
     return EXIT_SUCCESS;
 }
 
-void trouverOffset(affichage_struct *affichage, unsigned int *x, unsigned int *y) {
-    unsigned int offset = 0;
+// toruver la tete de la liste d'affichage
+affichage_struct* trouverTete(affichage_struct *affichage) {
+    if(affichage == NULL)
+        return NULL;
+
+    affichage_struct *affichageActuel = affichage;
+    while(affichageActuel->precedent != NULL) { // on remonte la liste
+        affichageActuel = affichageActuel->precedent;
+    }
+
+    return affichageActuel;
+}
+
+void trouverOffset(affichage_struct *affichage, int *x, int *y) {
+    int offset = 0;
 
     // on calcule l'offset
-    affichage_struct *affichageActuel = listeAffichage;
+    affichage_struct *affichageActuel = trouverTete(affichage);
     while(affichageActuel != NULL && affichageActuel != affichage) {
         offset += affichageActuel->margeHaut + affichageActuel->hauteur + affichageActuel->margeBas;
         affichageActuel = affichageActuel->suivant;
@@ -63,23 +92,21 @@ void trouverOffset(affichage_struct *affichage, unsigned int *x, unsigned int *y
 }
 
 void affichageClean(affichage_struct* affichage) {
-    unsigned int x, y;
+    int x, y;
     trouverOffset(affichage, &x, &y);
 
     for(unsigned int i = 0; i < affichage->hauteur; ++i) {
         printf("\033[%d;%dH", y+i, x);
         printf("%c[2K", 27);
-        printf("                                                                                 ");
     }
 }
 
 void affichageWrite(affichage_struct* affichage, char* format, ...) {
-    unsigned int x, y;
+    int x, y;
     trouverOffset(affichage, &x, &y);
 
-    // clear line
+    // setting position
     printf("\033[%d;%dH", y, x);
-
 
     // extract args
     va_list args;
@@ -100,6 +127,16 @@ void affichagePrintf(affichage_struct* affichage, char* format, ...) {
     affichageWrite(affichage, format, args);
     // end args
     va_end(args);
+}
+
+int affichage_dupliquer(affichage_struct *source, affichage_struct *destination) {
+    if(source == NULL && destination == NULL)
+        return EXIT_FAILURE;
+
+    destination->margeHaut = source->margeGauche;
+    destination->margeGauche = source->margeGauche;
+    destination->hauteur = source->hauteur;
+    destination->margeBas = source->margeGauche;
 }
 
 #endif //LO41_PROJET_AFFICHAGE_FONCTION_H

@@ -20,20 +20,30 @@ int main (void) {
 
     detruireAvion(a);
 
-    sleep(5);
+    // sleep(5);
     system("clear");
 
-    affichage_struct aff;
+    affichage_struct *liste = NULL;
+    affichage_struct aff, loader_aff;
+
+    // initialize affichage
+    affichageInitialiser(&aff);
+    affichageInitialiser(&loader_aff);
+
     aff.hauteur = 1;
     aff.margeHaut = 2;
-    ajouterAffichage(&aff);
+    ajouterAffichage(liste, &aff);
+    ajouterAffichage(liste, &loader_aff);
+
+    affichage_dupliquer(&aff, &loader_aff);
+
     loader_struct loader;
     ajouterMargeLoader(&aff);
     changerEtatLoader(&loader, LOADER_PAS_CHARGE);
 
     affichageClean(&aff);
     afficherLoader(&aff, &loader);
-    affichagePrintf(&aff, "Je ne charge pas.\n");
+    affichageWrite(&aff, "Je ne charge pas.\n");
 
     changerEtatLoader(&loader, LOADER_CHARGEMENT);
     int i = 0;
@@ -48,6 +58,7 @@ int main (void) {
 
     changerEtatLoader(&loader, LOADER_TERMINE);
     affichagePrintf(&aff, "Je suis chargé.\n");
+    sleep(2);
     afficherLoader(&aff, &loader);
     return 0;
 }

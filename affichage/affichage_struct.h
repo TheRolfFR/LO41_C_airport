@@ -8,14 +8,12 @@
 #include <stdio.h>
 
 typedef struct s_affichage {
-    unsigned int margeHaut;
-    unsigned int margeBas;
-    unsigned int margeGauche;
-    unsigned int hauteur;
+    int margeHaut;
+    int margeBas;
+    int margeGauche;
+    int hauteur;
     struct s_affichage *precedent;
     struct s_affichage *suivant;
 } affichage_struct;
-
-static affichage_struct *listeAffichage = NULL;
 
 #endif //LO41_PROJET_AFFICHAGE_STRUCT_H
