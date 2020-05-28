@@ -25,18 +25,18 @@ int affichageInitialiser(affichage_struct *affichage) {
     return EXIT_SUCCESS;
 }
 
-int ajouterAffichage(affichage_struct *liste, affichage_struct *affichage) {
+int ajouterAffichage(affichage_struct **liste, affichage_struct *affichage) {
 
     if(affichage == NULL)
         return EXIT_FAILURE;
 
 
-    if (liste == NULL) {
-        liste = affichage;
+    if (*liste == NULL) {
+        *liste = affichage;
         return EXIT_SUCCESS;
     }
 
-    affichage_struct *affichageActuel = liste;
+    affichage_struct *affichageActuel = *liste;
     while (affichageActuel->suivant != NULL) {
         affichageActuel = affichageActuel->suivant;
     }
@@ -88,7 +88,12 @@ void trouverOffset(affichage_struct *affichage, int *x, int *y) {
 
     // goto x = 0 and y = offset
     *x = affichage->margeGauche + 1;
-    *y = offset + 1;
+    *y = offset + affichage->margeHaut + 1;
+}
+
+void affichageNettoyerEcran() {
+    system("cls"); // on windows
+    system("clear"); // on linux
 }
 
 void affichageClean(affichage_struct* affichage) {
@@ -133,10 +138,10 @@ int affichage_dupliquer(affichage_struct *source, affichage_struct *destination)
     if(source == NULL && destination == NULL)
         return EXIT_FAILURE;
 
-    destination->margeHaut = source->margeGauche;
+    destination->margeHaut = source->margeHaut;
     destination->margeGauche = source->margeGauche;
     destination->hauteur = source->hauteur;
-    destination->margeBas = source->margeGauche;
+    destination->margeBas = source->margeBas;
 }
 
 #endif //LO41_PROJET_AFFICHAGE_FONCTION_H
