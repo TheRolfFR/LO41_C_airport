@@ -36,17 +36,6 @@ int ajouterAffichage(affichage_struct **liste, affichage_struct *affichage) {
         return EXIT_SUCCESS;
     }
 
-int ajouterAffichage(affichage_struct **liste, affichage_struct *affichage) {
-
-    if(affichage == NULL)
-        return EXIT_FAILURE;
-
-
-    if (*liste == NULL) {
-        *liste = affichage;
-        return EXIT_SUCCESS;
-    }
-
     affichage_struct *affichageActuel = *liste;
     while (affichageActuel->suivant != NULL) {
         affichageActuel = affichageActuel->suivant;
