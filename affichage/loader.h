@@ -13,7 +13,8 @@
 typedef enum enum_etat_loader {
     LOADER_PAS_CHARGE,
     LOADER_CHARGEMENT,
-    LOADER_TERMINE
+    LOADER_TERMINE,
+    LOADER_ERREUR
 } etat_loader;
 
 const char loader_caractere_pas_charge = '_';
@@ -28,6 +29,8 @@ const char loader_caracteres_chargement[ETAPES_CHARGEMENT] = {
 
 const char loader_caractere_termine = 'V';
 
+const char loader_caractere_erreur = 'E';
+
 typedef struct s_loader {
     etat_loader etat; // etat du loader
     unsigned int offset_caractere; // offset (loader_caracteres_chargement)
@@ -39,7 +42,7 @@ typedef struct s_loader {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
 
-int changerEtatLoader(loader_struct *loader, etat_loader nouvelEtat) {
+int loaderChangerEtat(loader_struct *loader, etat_loader nouvelEtat) {
     loader->etat = nouvelEtat;
 
     switch (nouvelEtat) {
@@ -49,6 +52,9 @@ int changerEtatLoader(loader_struct *loader, etat_loader nouvelEtat) {
         case LOADER_TERMINE:
             loader->caractere = loader_caractere_termine;
             break;
+        case LOADER_ERREUR:
+            loader->caractere = loader_caractere_erreur;
+            break;
         default:
             loader->caractere = loader_caractere_pas_charge;
             break;
@@ -57,7 +63,7 @@ int changerEtatLoader(loader_struct *loader, etat_loader nouvelEtat) {
 
 /// Permet de changer le caractere lors du chargement
 /// \param loader le loader affecté
-void updateCaractere(loader_struct* loader) {
+void loaderUpdateCaractere(loader_struct* loader) {
     if(loader->etat == LOADER_CHARGEMENT) {
         unsigned int offset = loader->offset_caractere;
         offset = (offset + 1) % ETAPES_CHARGEMENT;
@@ -66,7 +72,7 @@ void updateCaractere(loader_struct* loader) {
     }
 }
 
-int ajouterMargeLoader(affichage_struct *affichage) {
+int loaderAjouterMarge(affichage_struct *affichage) {
     if(affichage == NULL)
         return EXIT_FAILURE;
 
@@ -75,7 +81,7 @@ int ajouterMargeLoader(affichage_struct *affichage) {
     return EXIT_SUCCESS;
 }
 
-int enleverMargeLoader(affichage_struct *affichage) {
+int loaderEnleverMarge(affichage_struct *affichage) {
     if(affichage == NULL || affichage->margeGauche < 3)
         return EXIT_FAILURE;
 
@@ -87,7 +93,7 @@ int enleverMargeLoader(affichage_struct *affichage) {
 /// Affiche le loader dans un affichage
 /// \param affichage place dans l'affichage
 /// \param loader loader concerné
-void afficherLoader(loader_struct *loader) {
+void loaderAfficher(loader_struct *loader) {
     switch (loader->etat) {
         case LOADER_CHARGEMENT:
             printf("" KYEL);
@@ -99,10 +105,31 @@ void afficherLoader(loader_struct *loader) {
             affichageWrite(&loader->affichage, " %c ", loader->caractere);
             printf("" KNRM);
             break;
+        case LOADER_ERREUR:
+            printf("" KRED);
+            affichageWrite(&loader->affichage, " %c ", loader->caractere);
+            printf("" KNRM);
+            break;
         default:
             affichageWrite(&loader->affichage, " %c ", loader->caractere);
             break;
     }
+}
+
+void loaderAfficherTexte(loader_struct *loader, char *format, ...) {
+    affichageClean(&(loader->affichage));
+
+    loaderAfficher(loader);
+    int x, y;
+    trouverOffset(&(loader->affichage), &x, &y);
+
+    // extract args
+    va_list args;
+    va_start(args, format);
+    // afficher avec de l'offset
+    affichageWriteOffsetVa(&(loader->affichage), x + 3, y, format, args);
+    // end args
+    va_end(args);
 }
 
 #pragma clang diagnostic pop
