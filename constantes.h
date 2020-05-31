@@ -71,4 +71,6 @@ char* destinations_inter[NB_DESTINATIONS_INTER] = {
 
 #define TARMAC_NB_AVIONS 10
 
+#define NB_AVIONS 20
+
 #endif //LO41_PROJET_CONSTANTES_H
