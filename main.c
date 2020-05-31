@@ -10,6 +10,7 @@
 #include "affichage/affichage_fonction.h"
 #include "affichage/loader.h"
 #include "piste/piste.h"
+#include "affichage/colonne/colonne_fonction.h"
 #include "constantes.h"
 
 #define MAX_ROTATIONS 42
@@ -41,6 +42,14 @@ int main (void) {
 
     afficherPiste(&mesPistes[0]);
     afficherPiste(&mesPistes[1]);
+
+    // ajout des colonnes
+    affichage_struct affichageColonne;
+    colonne_struct mesColonnes[10];
+    affichageInitialiser(&affichageColonne);
+    colonneInitialiserTableau(&affichageColonne, mesColonnes, 10, 6, "yes");
+    ajouterAffichage(&liste, &affichageColonne);
+    colonneLigneUpdate(&mesColonnes[0]);
 
     // initialize affichage
     affichageInitialiser(&loader.affichage);
