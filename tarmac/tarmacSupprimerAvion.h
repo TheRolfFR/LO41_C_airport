@@ -33,8 +33,8 @@ void tarmacSupprimerAvion(tarmac *t, avion *a) {
     t->avionsPresents[position] = NULL;
 
     // on met a jour le contenu de la colonne dans le tarmac
-    colonneChangeContenu(&t->colonnesAvions[i], TARMAC_VALEUR_DEFAUT);
-    colonneUpdate(&t->colonnesAvions[i]);
+    colonneChangeContenu(&t->colonnesAvions[position], TARMAC_VALEUR_DEFAUT);
+    colonneUpdate(&t->colonnesAvions[position]);
 
     return;
 }
