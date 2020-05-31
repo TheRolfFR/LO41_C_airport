@@ -7,6 +7,7 @@
 #include "utilitaires/lireLigne.h"
 #include "avion/creerAvion.h"
 #include "avion/aficherAvion.h"
+#include "avion/avionChangerDirection.h"
 #include "affichage/affichage_fonction.h"
 #include "affichage/loader.h"
 #include "piste/piste.h"
@@ -68,14 +69,9 @@ int main (void) {
     loaderChangerEtat(&loader, LOADER_CHARGEMENT);
     int i = 0;
     while(i < MAX_ROTATIONS) {
-        if(i == MAX_ROTATIONS/2) {
-            choisirDestination(a);
-            a->atterissageUrgent = false;
-            a->estArrivant = false;
-
-            choisirDestination(b);
-            b->atterissageUrgent = false;
-            b->estArrivant = false;
+        if(i%6 == 0) {
+            avionChangerDirection(a);
+            avionChangerDirection(b);
 
             afficherPiste(&mesPistes[0]);
             afficherPiste(&mesPistes[1]);

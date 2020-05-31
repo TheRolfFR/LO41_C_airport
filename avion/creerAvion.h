@@ -10,6 +10,7 @@
 #include "../utilitaires/aleatoire.h"
 #include "../constantes.h"
 #include "../utilitaires/date.h"
+#include "avionAtterissageForce.h"
 
 // fonction lancée quand on veut créer un nouvel avion aléatoire
 avion* creerAvion() {
@@ -26,10 +27,7 @@ avion* creerAvion() {
     // on se demande si c'est un gros avion
     resultat->grosAvion = aleatoireFloatRange(0, 1, 3) <= PROBA_GROS_AVION;
 
-    //atterissage d'urgence
-    if(aleatoireFloatRange(0, 1, 3) <= PROBA_ATTERISSAGE_FORCE) {
-        resultat->atterissageUrgent = true;
-    }
+    avionAtterissageForce(resultat);
 
     // date d'atterissage
     mettreDate(resultat);
