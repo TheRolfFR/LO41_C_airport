@@ -25,18 +25,18 @@ int affichageInitialiser(affichage_struct *affichage) {
     return EXIT_SUCCESS;
 }
 
-int ajouterAffichage(affichage_struct **liste, affichage_struct *affichage) {
+int affichageAjouter(affichage_struct *liste, affichage_struct *affichage) {
 
     if(affichage == NULL)
         return EXIT_FAILURE;
 
 
-    if (*liste == NULL) {
-        *liste = affichage;
+    if (liste == NULL) {
+        liste = affichage;
         return EXIT_SUCCESS;
     }
 
-    affichage_struct *affichageActuel = *liste;
+    affichage_struct *affichageActuel = liste;
     while (affichageActuel->suivant != NULL) {
         affichageActuel = affichageActuel->suivant;
     }
@@ -48,17 +48,33 @@ int ajouterAffichage(affichage_struct **liste, affichage_struct *affichage) {
     return EXIT_SUCCESS;
 }
 
-int supprimerAffichage(affichage_struct* affichage) {
+int affichageSupprimer(affichage_struct* liste, affichage_struct* affichage) {
     if(affichage == NULL)
         return EXIT_FAILURE;
 
-    // on lie avec le précédent
-    if(affichage->precedent != NULL)
-        affichage->precedent->suivant = NULL;
+    affichage_struct *prec = affichage->precedent, *suiv = affichage->suivant;
 
-    // on lie avec le suivant
-    if(affichage->suivant != NULL)
-        affichage->suivant->precedent = NULL;
+    // si c'est le seul de sa liste
+    if(prec == NULL && suiv == NULL) {
+        liste = NULL; // on vide la liste
+    } else {
+        // sinon
+
+        // si on est au milieu, on relie tout
+        if(prec != NULL && suiv != NULL) {
+            prec->suivant = suiv;
+            suiv->precedent = prec;
+        } else {
+            // si on est le premier
+            if(affichage->precedent == NULL) {
+                liste = suiv; // on met en premier le suivant
+                suiv->precedent = NULL; // on indique que au suivant qu'il est premier (possible car on est pas le seul de la liste)
+            } else {
+                // on est le dernier, on précise au précédent qu'il est dernier
+                prec->suivant = NULL;
+            }
+        }
+    }
 
     return EXIT_SUCCESS;
 }
@@ -134,7 +150,7 @@ void affichagePrintf(affichage_struct* affichage, char* format, ...) {
     va_end(args);
 }
 
-int affichage_dupliquer(affichage_struct *source, affichage_struct *destination) {
+int affichageDupliquer(affichage_struct *source, affichage_struct *destination) {
     if(source == NULL && destination == NULL)
         return EXIT_FAILURE;
 

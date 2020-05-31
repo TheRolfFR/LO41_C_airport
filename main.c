@@ -37,8 +37,8 @@ int main (void) {
     mesPistes[0].avionEnCours = a;
     mesPistes[1].avionEnCours = b;
 
-    ajouterAffichage(&liste, &mesPistes[0].affichage);
-    ajouterAffichage(&liste, &mesPistes[1].affichage);
+    affichageAjouter(liste, &mesPistes[0].affichage);
+    affichageAjouter(liste, &mesPistes[1].affichage);
 
     afficherPiste(&mesPistes[0]);
     afficherPiste(&mesPistes[1]);
@@ -48,7 +48,7 @@ int main (void) {
     colonne_struct mesColonnes[10];
     affichageInitialiser(&affichageColonne);
     colonneInitialiserTableau(&affichageColonne, mesColonnes, 10, 6, "yes");
-    ajouterAffichage(&liste, &affichageColonne);
+    affichageAjouter(liste, &affichageColonne);
     colonneLigneUpdate(&mesColonnes[0]);
 
     // initialize affichage
@@ -56,8 +56,8 @@ int main (void) {
     affichageInitialiser(&deuxieme_ligne);
 
     loader.affichage.hauteur = 1;
-    ajouterAffichage(&liste, &loader.affichage);
-    ajouterAffichage(&liste, &deuxieme_ligne);
+    affichageAjouter(liste, &loader.affichage);
+    affichageAjouter(liste, &deuxieme_ligne);
 
     loaderAfficherTexteEtat(&loader, LOADER_TERMINE, "Je suis chargé.\n");
 
