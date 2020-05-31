@@ -1,109 +1,90 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <string.h>
+#include <sys/msg.h>
 #include "utilitaires/aleatoire.h"
-#include "utilitaires/lireLigne.h"
-#include "avion/avionCreer.h"
-#include "avion/avionAfficher.h"
-#include "avion/avionChangerDirection.h"
-#include "affichage/affichage_fonction.h"
-#include "affichage/loader.h"
-#include "piste/piste.h"
-#include "affichage/colonne/colonne_fonction.h"
-#include "constantes.h"
-#include "tarmac/tarmac_struct.h"
+#include "mutex/avions/mutex_avions_struct.h"
+#include "arguments/argument_thread_struct.h"
+#include "arguments/argument_thread_avion.h"
 #include "tarmac/tarmacInitialiser.h"
-#include "tarmac/tarmacAfficher.h"
-#include "tarmac/tarmacAjouterAffichage.h"
-#include "tarmac/tarmacAjouterAvion.h"
-#include "tarmac/tarmacSupprimerAvion.h"
+#include "utilitaires/erreur.h"
+#include "thread/thread_lib.h"
+#include "avion/avionThread.h"
+#include "controleur/controleurThread.h"
+#include <signal.h>
 
-#define MAX_ROTATIONS 42
+// j'ai besoin de quelques choses :
+
+// la stucture des arguments généraux
+// le mutex général est dedans mais pas besoin de l'initialiser
+argument_thread_struct mesArguments;
+
+// la structure des aguments d'avions
+argument_thread_avion argumentsMonAvion;
+
+// il nous fout des structures de thread pour les avions
+thread_struct mesAvions[NB_AVIONS];
+
+// et une structure de thread pour notre controleur
+thread_struct monControleur;
+
+void arreterFileMessages() {
+    // supprimer la file de message
+    if(msgctl(mesArguments.idFileMsgAvions, IPC_RMID, 0) == -1) {
+        erreur("Erreur lors de la suppression de la file ");
+    }
+}
+
+// on est prudent, on met un traitant pour sigint
+void traitantSigint(int num) {
+    if(num == SIGINT) {
+        // tuer les threads
+        for (int i = 0; i < NB_AVIONS; ++i) {
+            threadTuer(&mesAvions[i]);
+        }
+
+        threadTuer(&monControleur);
+
+        arreterFileMessages();
+
+        erreur("Terminaison programme");
+    }
+}
 
 int main (void) {
     initAleatoire(); // on initialise l'aléatoire
 
-    avion* a = avionCreer();
-    avion* b = avionCreer();
+    // tenter de générer une file de messages
+    if((mesArguments.idFileMsgAvions = msgget(CLE_FILE_MESSAGES, 0)) == -1)
+        erreur("Erreur lors de la création de la file de message.");
 
-    // sleep(5);
-    affichageNettoyerEcran();
+    // initialiser les arguments généraux
+    tarmacInitialiser(&mesArguments.monTarmac);
 
-    affichage_struct *liste = NULL;
-    affichage_struct aff, deuxieme_ligne;
+    // initialiser mes pistes
+    initialiserPiste(&mesArguments.mesPistes[0], true);
+    initialiserPiste(&mesArguments.mesPistes[1], false);
 
-    loader_struct loader;
+    // on met les arguments généraux dans les arguments pour les avions
+    argumentsMonAvion.argumentsThread = &mesArguments;
 
-    // ajout de pistes
-    piste mesPistes[2];
-    initialiserPiste(&mesPistes[0], true);
-    initialiserPiste(&mesPistes[1], false);
-
-    mesPistes[0].avionEnCours = a;
-    mesPistes[1].avionEnCours = b;
-
-    affichageAjouter(&liste, &mesPistes[0].affichage);
-    affichageAjouter(&liste, &mesPistes[1].affichage);
-
-    afficherPiste(&mesPistes[0]);
-    afficherPiste(&mesPistes[1]);
-
-    // ajout tarmac
-    tarmac t;
-    tarmacInitialiser(&t);
-    tarmacAjouterAffichage(&liste, &t);
-    tarmacAfficher(&t);
-
-    // initialize affichage
-    affichageInitialiser(&loader.affichage);
-    affichageInitialiser(&deuxieme_ligne);
-
-    loader.affichage.hauteur = 1;
-    affichageAjouter(&liste, &loader.affichage);
-    affichageAjouter(&liste, &deuxieme_ligne);
-
-    loaderAfficherTexteEtat(&loader, LOADER_TERMINE, "Je suis chargé.\n");
-
-    affichagePrintf(&deuxieme_ligne, "Je suis une seconde ligne\n");
-
-    sleep(1);
-
-    loaderChangerEtat(&loader, LOADER_CHARGEMENT);
-    int i = 0;
-    while(i < MAX_ROTATIONS) {
-        if(i%6 == 0) {
-
-            tarmacAjouterAvion(&t, a);
-            tarmacAjouterAvion(&t, b);
-
-            sleep(1);
-
-            avionChangerDirection(a);
-            avionChangerDirection(b);
-            tarmacSupprimerAvion(&t, a);
-            tarmacSupprimerAvion(&t, b);
-
-            afficherPiste(&mesPistes[0]);
-            afficherPiste(&mesPistes[1]);
-        }
-        loaderAfficherTexte(&loader, "Je suis en train de charger : %d/%d\n", i + 1, MAX_ROTATIONS);
-        usleep(75000);
-        loaderUpdateCaractere(&loader);
-        ++i;
+    // démarrer tous les threads des avions
+    for(int i = 0; i < NB_AVIONS; ++i) {
+        mesAvions[i].fonction = avionThread;
+        argumentsMonAvion.index = i;
+        lancerThread(&mesAvions[i], (void *) &argumentsMonAvion);
     }
 
-    sleep(1);
+    // démarrer le thread du contrôleur
+    monControleur.fonction = controleurThread;
+    lancerThread(&monControleur, (void *) &mesArguments);
 
-    // comment afficher une erreur
-    loaderChangerEtat(&loader, LOADER_ERREUR);
-    loaderAfficherTexte(&loader, "Ceci est une erreur.\n");
+    // attendre tous les threads
+    for(int i = 0; i < NB_AVIONS; ++i) {
+        threadAttendre(&mesAvions[i]);
+    }
+    threadAttendre(&monControleur);
 
-    affichagePrintf(&deuxieme_ligne, "Je suis une seconde ligne\n");
+    arreterFileMessages();
 
-    detruireAvion(a);
-    detruireAvion(b);
-
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -76,4 +76,7 @@ char* destinations_inter[NB_DESTINATIONS_INTER] = {
 /// duree de décollage / atterrissage
 #define ACTION_DUREE 2
 
+/// definir la clé pour une file de message de manière arbitraire
+#define CLE_FILE_MESSAGES 42
+
 #endif //LO41_PROJET_CONSTANTES_H

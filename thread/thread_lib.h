@@ -4,5 +4,6 @@
 #include "thread_struct.h"
 #include "threadLancer.h"
 #include "threadAttendre.h"
+#include "threadTuer.h"
 
 #endif
