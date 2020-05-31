@@ -92,8 +92,10 @@ void colonneUpdate(colonne_struct *colonne) {
 
     // il faut clean les caractères de la colonne en particulier
     char clean[COLONNE_TAILLE_BUFFER];
-    for(int i = 0; i < COLONNE_TAILLE_BUFFER; ++i)
+    int i;
+    for(i = 0; i < colonne->largeur; ++i) // ATTENTION IL FAUT UNIQUEMENT CLEAR LA LARGEUR DE LA COLONNE
         clean[i] = ' ';
+    clean[i] = '\0';
 
     // on clean les caractères
     affichageWriteOffset(colonne->affichage, x, y, clean);

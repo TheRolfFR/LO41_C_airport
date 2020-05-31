@@ -13,6 +13,12 @@
 #include "piste/piste.h"
 #include "affichage/colonne/colonne_fonction.h"
 #include "constantes.h"
+#include "tarmac/tarmac_struct.h"
+#include "tarmac/tarmacInitialiser.h"
+#include "tarmac/tarmacAfficher.h"
+#include "tarmac/tarmacAjouterAffichage.h"
+#include "tarmac/tarmacAjouterAvion.h"
+#include "tarmac/tarmacSupprimerAvion.h"
 
 #define MAX_ROTATIONS 42
 
@@ -44,13 +50,11 @@ int main (void) {
     afficherPiste(&mesPistes[0]);
     afficherPiste(&mesPistes[1]);
 
-    // ajout des colonnes
-    affichage_struct affichageColonne;
-    colonne_struct mesColonnes[10];
-    affichageInitialiser(&affichageColonne);
-    colonneInitialiserTableau(&affichageColonne, mesColonnes, 10, 6, "yes");
-    affichageAjouter(&liste, &affichageColonne);
-    colonneLigneUpdate(&mesColonnes[0]);
+    // ajout tarmac
+    tarmac t;
+    tarmacInitialiser(&t);
+    tarmacAjouterAffichage(&liste, &t);
+    tarmacAfficher(&t);
 
     // initialize affichage
     affichageInitialiser(&loader.affichage);
@@ -70,8 +74,16 @@ int main (void) {
     int i = 0;
     while(i < MAX_ROTATIONS) {
         if(i%6 == 0) {
+
+            tarmacAjouterAvion(&t, a);
+            tarmacAjouterAvion(&t, b);
+
+            sleep(1);
+
             avionChangerDirection(a);
             avionChangerDirection(b);
+            tarmacSupprimerAvion(&t, a);
+            tarmacSupprimerAvion(&t, b);
 
             afficherPiste(&mesPistes[0]);
             afficherPiste(&mesPistes[1]);

@@ -69,5 +69,6 @@ char* destinations_inter[NB_DESTINATIONS_INTER] = {
 
 #define MISE_EN_ATTENTE_FUEL 5
 
+#define TARMAC_NB_AVIONS 10
 
 #endif //LO41_PROJET_CONSTANTES_H
