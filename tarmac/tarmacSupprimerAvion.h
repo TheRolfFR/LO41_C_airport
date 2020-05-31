@@ -9,9 +9,9 @@
 #ifndef LO41_PROJET_TARMACSUPPRIMERAVION_H
 #define LO41_PROJET_TARMACSUPPRIMERAVION_H
 
-/// fonction permettant de possiblement supprimer un avion du tarmac
+/// fonction permettant de possiblement supprimer un avions du tarmac
 /// \param t tarmac concerné
-/// \param a avion a supprimer
+/// \param a avions a supprimer
 void tarmacSupprimerAvion(tarmac *t, avion *a) {
     if(t == NULL || a == NULL)
         return;
@@ -19,7 +19,7 @@ void tarmacSupprimerAvion(tarmac *t, avion *a) {
     int position = -1;
     int i = 0;
     while(i < TARMAC_NB_AVIONS && position == -1) {
-        if(t->avionsPresents[i] == a) // on cherche l'avion
+        if(t->avionsPresents[i] == a) // on cherche l'avions
             position = i;
 
         ++i;

@@ -23,7 +23,7 @@ void avionAfficher(avion* a) {
     // fuel
     printf(" Fuel:%3d", a->fuel);
 
-    // gros avion
+    // gros avions
     printf(" G:%d", a->grosAvion);
 
     // atterissage urgent

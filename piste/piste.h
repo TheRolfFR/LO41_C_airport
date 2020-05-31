@@ -94,7 +94,7 @@ void afficherPiste(piste *p) {
         }
 
         // milieu de phrase
-        ecrireSuite(buffer, " de l'avion #", PISTE_TAILLE_BUFFER);
+        ecrireSuite(buffer, " de l'avions #", PISTE_TAILLE_BUFFER);
         ecrireSuite(buffer, a->numeroVol, PISTE_TAILLE_BUFFER);
 
         // provenance/destination

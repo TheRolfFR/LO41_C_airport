@@ -8,20 +8,21 @@
 #include "../avion/avion.h"
 #include "../constantes.h"
 #include "../piste/piste.h"
+#include <pthread.h>
 
 /// Thread du controleur, doit être capapble de tout gérer
 /// tourne à l'infini
-/// \param arg arguments passés au thread : les mutex pour les avions, les mutex pour les pistes, la file de messages pour les avions
+/// \param arg arguments passés au thread : les mutex pour les avions, les mutex pour les pistes (inutile, voir mutex_pistes_struct.h pourquoi), la file de messages pour les avions
 /// \return je ne sais pas encore
 void *controleurThread(void* arg) {
     /* on décode les arguments contenant :
-     * - les mutex pour controler les avions (chaque avion individuellement mais aussi le mutex pour les avions en atterissage force)
-     * - les mutex pour controler les pistes
-     * - la file de message pour récupérer les avions
+     * - les mutex pour controler les avions (chaque avions individuellement mais aussi le mutex pour les avions en atterissage force)
+     * - les mutex pour controler les pistes (inutile, voir mutex_pistes_struct.h pourquoi)
+     * - l'id de la file de message pour récupérer les avions
      */
 
     // on doit créer un tableau d'avions
-    // attention: la liste d'avion est différente des deux listes d'attentes pour les pistesz
+    // attention: la liste d'avions est différente des deux listes d'attentes pour les pistesz
     avion *tableauAvions[NB_AVIONS];
 
     /*
@@ -49,7 +50,7 @@ void *controleurThread(void* arg) {
 
     // "enfin" on peut lancer la boucle infinie qui lancera la gestion des pistes
     while(true) {
-        // on attend l'évènement de libération d'une piste QUELCONQUE
+        // on attend l'évènement de libération d'une piste QUELCONQUE, bref d'une action d'avion quelconque
 
         // on revoit la génération du planning
 

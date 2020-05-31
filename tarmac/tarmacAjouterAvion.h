@@ -9,10 +9,10 @@
 #ifndef LO41_PROJET_TARMACAJOUTERAVION_H
 #define LO41_PROJET_TARMACAJOUTERAVION_H
 
-/// fonction qui rajoute un avion au tarmac si possible
+/// fonction qui rajoute un avions au tarmac si possible
 /// \param t tarmac concerné
-/// \param a avion a ajouter
-/// \return -1 si pas de place ou erreur, position de l'avion dans le tarmac sinon sinon
+/// \param a avions a ajouter
+/// \return -1 si pas de place ou erreur, position de l'avions dans le tarmac sinon sinon
 int tarmacAjouterAvion(tarmac *t, avion *a) {
     if(t == NULL || a == NULL)
         return EXIT_FAILURE;
@@ -31,14 +31,14 @@ int tarmacAjouterAvion(tarmac *t, avion *a) {
     if(i == TARMAC_NB_AVIONS)
         return EXIT_FAILURE;
 
-    // sinon on affecte l'avion
+    // sinon on affecte l'avions
     t->avionsPresents[position] = a;
 
-    // on met a jour le numéro de l'avion dans le tarmac
+    // on met a jour le numéro de l'avions dans le tarmac
     colonneChangeContenu(&t->colonnesAvions[position], a->numeroVol);
     colonneUpdate(&t->colonnesAvions[position]);
 
-    // on retourne la position de l'avion dans le tarmac
+    // on retourne la position de l'avions dans le tarmac
     return position;
 }
 
