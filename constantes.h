@@ -73,4 +73,7 @@ char* destinations_inter[NB_DESTINATIONS_INTER] = {
 
 #define NB_AVIONS 20
 
+/// duree de décollage / atterrissage
+#define ACTION_DUREE 2
+
 #endif //LO41_PROJET_CONSTANTES_H
