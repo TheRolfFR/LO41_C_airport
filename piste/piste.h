@@ -25,7 +25,6 @@
 #define PISTE_TAILLE_BUFFER 500
 
 typedef struct s_piste {
-    bool occupe;
     avion *avionEnCours;
     bool longue;
     affichage_struct affichage;
@@ -36,7 +35,6 @@ int initialiserPiste(piste *p, bool longue) {
         return EXIT_FAILURE;
 
     // tout vide
-    p->occupe = false;
     p->avionEnCours = NULL;
     p->longue = longue;
 
