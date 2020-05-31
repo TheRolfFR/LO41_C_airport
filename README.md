@@ -1,8 +1,6 @@
-# LO41 - C - Airport
+# LO41 - C - Airport control tower simulation
 
-<img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/TheRolfFR/LO41_C_airport?style=flat-square">
-<img alt="GitHub repo size" src="https://tokei.rs/b1/github/TheRolfFR/LO41_C_airport?category=code">
-<a href="./LICENSE.md"><img alt="GitHub repo size" src="https://img.shields.io/badge/License-NPOSL--3.0-red?style=flat-square"></a>
+<img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/TheRolfFR/LO41_C_airport?style=flat-square"> <img alt="GitHub repo size" src="https://tokei.rs/b1/github/TheRolfFR/LO41_C_airport?category=code"> <a href="./LICENSE.md"><img alt="GitHub repo size" src="https://img.shields.io/badge/License-NPOSL--3.0-red?style=flat-square"></a>
 
 
 _Personal academic project : C control tower simulation in system c_
