@@ -12,6 +12,7 @@
 
 typedef struct struct_avion {
     char numeroVol[AVION_TAILLE_NUM_VOL];
+    int numero;
     char *lieu;
     bool estArrivant;
     int fuel;

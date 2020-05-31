@@ -13,7 +13,7 @@
 #include "avionAtterissageForce.h"
 
 // fonction lancée quand on veut créer un nouvel avions aléatoire
-avion* avionCreer() {
+avion* avionCreer(int numero) {
     avion* resultat = (avion*) malloc(sizeof(avion)); // on génère dynamiquement un nouvel avions
 
     resultat->estArrivant = true;
@@ -31,6 +31,9 @@ avion* avionCreer() {
 
     // date d'atterissage
     mettreDate(resultat);
+
+    // numero d'index d'avion
+    resultat->numero = numero;
 
     return resultat;
 }

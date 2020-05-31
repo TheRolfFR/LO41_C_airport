@@ -11,6 +11,10 @@
 #include "../arguments/argument_thread_struct.h"
 #include "../ipc/msgAvions.h"
 #include "../ipc/msgRecevoir.h"
+#include "../listeAttente/liste_attente_struct.h"
+#include "../listeAttente/listeAttenteCreer.h"
+#include "../piste/pisteOcupee.h"
+#include "../mutex/avions/mutexAvionsLibererAvion.h"
 #include <pthread.h>
 
 /// Thread du controleur, doit être capapble de tout gérer
@@ -51,6 +55,10 @@ void *controleurThread(void* arg) {
     initialiserPiste(&arguments->mesPistes[1], false);
 
     // on doit creer nos deux listes d'attente
+    liste_attente_struct listeAttenteGrandePiste[NB_AVIONS];
+    liste_attente_struct listeAttentePetitePiste[NB_AVIONS];
+    listeAttenteCreer(listeAttenteGrandePiste);
+    listeAttenteCreer(listeAttentePetitePiste);
 
     // on doit faire une première génération du planning
 
@@ -61,8 +69,22 @@ void *controleurThread(void* arg) {
         pthread_cond_wait(&arguments->mutexAvions.avionQuelconque, &arguments->mutexAvions.mutex);
 
         // on revoit la génération du planning
+        // pour les deux pistes
 
         // on réalise des actions sur les pistes
+
+        // tu débloques le mutex
+        pthread_mutex_unlock(&arguments->mutexAvions.mutex);
+
+        // grande piste
+        if(pisteEstOccupee(&arguments->mesPistes[0])) {
+            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0].a->numero);
+        }
+
+        // petite piste
+        if(pisteEstOccupee(&arguments->mesPistes[1])) {
+            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[1].a->numero);
+        }
 
         // on attend de nouveau
     }
