@@ -14,6 +14,8 @@
 #include "../ipc/msgEnvoyer.h"
 #include "../ipc/msgAvions.h"
 #include "avionChangerDirection.h"
+#include "../tarmac/tarmacAjouterAvion.h"
+#include "../tarmac/tarmacSupprimerAvion.h"
 
 /// Thread de "l'avion", doit être capapble de tout gérer
 /// tourne à l'infini
@@ -37,6 +39,12 @@ void *avionThread(void *arg) {
 
         // faire l'action (décollage / atterrissage)
         sleep(ACTION_DUREE);
+
+        if(a->estArrivant) {
+            tarmacAjouterAvion(&argumentsThread->monTarmac);
+        } else {
+            tarmacSupprimerAvion(&argumentsThread->monTarmac);
+        }
 
         // on change la direction
         avionChangerDirection(a);
