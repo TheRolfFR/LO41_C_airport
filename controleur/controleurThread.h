@@ -51,8 +51,8 @@ void *controleurThread(void* arg) {
      * On doit aussi avoir des références aux pistes et pour les controler
      */
     // ajout de pistes
-    initialiserPiste(&arguments->mesPistes[0], true);
-    initialiserPiste(&arguments->mesPistes[1], false);
+    pisteInitialiser(&arguments->mesPistes[0], true);
+    pisteInitialiser(&arguments->mesPistes[1], false);
 
     // on doit creer nos deux listes d'attente
     liste_attente_struct listeAttenteGrandePiste[NB_AVIONS];
@@ -79,14 +79,14 @@ void *controleurThread(void* arg) {
         // grande piste
         if(pisteEstOccupee(&arguments->mesPistes[0])) {
             arguments->mesPistes[0].avionEnCours = listeAttenteGrandePiste[0].a;
-            afficherPiste(&arguments->mesPistes[0]);
+            pisteAfficher(&arguments->mesPistes[0]);
             mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0].a->numero);
         }
 
         // petite piste
         if(pisteEstOccupee(&arguments->mesPistes[1])) {
             arguments->mesPistes[1].avionEnCours = listeAttenteGrandePiste[1].a;
-            afficherPiste(&arguments->mesPistes[1]);
+            pisteAfficher(&arguments->mesPistes[1]);
             mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[1].a->numero);
         }
 

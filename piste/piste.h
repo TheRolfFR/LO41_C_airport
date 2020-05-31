@@ -30,7 +30,7 @@ typedef struct s_piste {
     affichage_struct affichage;
 } piste;
 
-int initialiserPiste(piste *p, bool longue) {
+int pisteInitialiser(piste *p, bool longue) {
     if(p == NULL)
         return EXIT_FAILURE;
 
@@ -55,7 +55,7 @@ int initialiserPiste(piste *p, bool longue) {
     return EXIT_SUCCESS;
 }
 
-void afficherPiste(piste *p) {
+void pisteAfficher(piste *p) {
     char buffer[PISTE_TAILLE_BUFFER];
 
     // on clean le buffer

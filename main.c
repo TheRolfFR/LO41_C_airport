@@ -61,8 +61,8 @@ int main (void) {
     tarmacInitialiser(&mesArguments.monTarmac);
 
     // initialiser mes pistes
-    initialiserPiste(&mesArguments.mesPistes[0], true);
-    initialiserPiste(&mesArguments.mesPistes[1], false);
+    pisteInitialiser(&mesArguments.mesPistes[0], true);
+    pisteInitialiser(&mesArguments.mesPistes[1], false);
 
     // on met les arguments généraux dans les arguments pour les avions
     argumentsMonAvion.argumentsThread = &mesArguments;
