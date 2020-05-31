@@ -81,12 +81,34 @@ void afficherPiste(piste *p) {
     }
 
     // au centre affichage de l'occupation de la piste
-    if(p->avionEnCours != NULL) {
-        if(p->avionEnCours->atterissageUrgent) {
-            ecrireSuite(buffer, "Atterrissage d'urgence de l'avion\n", PISTE_TAILLE_BUFFER);
+    avion *a = p->avionEnCours;
+    if(a != NULL) {
+        if(a->atterissageUrgent) {
+            // début phrase atterissage d'urgence
+            ecrireSuite(buffer, "Atterrissage d'urgence", PISTE_TAILLE_BUFFER);
         } else {
-            ecrireSuite(buffer, "Utilisation de la piste par un avion\n", PISTE_TAILLE_BUFFER);
+            //début phrase
+            if(a->estArrivant) {
+                ecrireSuite(buffer, "Aterrissage", PISTE_TAILLE_BUFFER);
+            } else {
+                ecrireSuite(buffer, "Décollage", PISTE_TAILLE_BUFFER);
+            }
         }
+
+        // milieu de phrase
+        ecrireSuite(buffer, " de l'avion #", PISTE_TAILLE_BUFFER);
+        ecrireSuite(buffer, a->numeroVol, PISTE_TAILLE_BUFFER);
+
+        // provenance/destination
+        if(a->estArrivant) {
+            ecrireSuite(buffer, " en provenance de ", PISTE_TAILLE_BUFFER);
+        } else {
+            ecrireSuite(buffer, " à destination de ", PISTE_TAILLE_BUFFER);
+        }
+
+        //  enfin le lieu
+        ecrireSuite(buffer, a->lieu, PISTE_TAILLE_BUFFER);
+        ecrireSuite(buffer, "\n", PISTE_TAILLE_BUFFER);
     } else {
         ecrireSuite(buffer, "Piste libre\n", PISTE_TAILLE_BUFFER);
     }
@@ -102,8 +124,8 @@ void afficherPiste(piste *p) {
     ecrireSuite(buffer, "\n", PISTE_TAILLE_BUFFER); // le retour a la ligne
 
     //avant print changer la couleur
-    if(p->avionEnCours != NULL) {
-        if(p->avionEnCours->atterissageUrgent) {
+    if(a != NULL) {
+        if(a->atterissageUrgent) {
             printf("" KRED); // piste rouge atterrissage urgence
         } else {
             printf("" KYEL); // piste utilisée

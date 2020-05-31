@@ -8,6 +8,7 @@
 #include "avion.h"
 #include "../utilitaires/aleatoire.h"
 #include "../constantes.h"
+#include <ctype.h>
 
 void choisirDestination(avion* a) {
     // on détermine de manière aléatoire son lieu
@@ -16,6 +17,9 @@ void choisirDestination(avion* a) {
     } else {
         a->lieu = destionations_fr[aleatoireEntierMaxExclu(NB_DESTINATIONS_FRANCE)];
     }
+
+    // on change le numéro de vol
+    snprintf(a->numeroVol, AVION_TAILLE_NUM_VOL, "%d%c%c", rand()%1000, toupper(a->lieu[0]), toupper(a->lieu[1]));
 }
 
 #endif //LO41_PROJET_CHOISIRDESTINATION_H
