@@ -5,8 +5,8 @@
 #include <string.h>
 #include "utilitaires/aleatoire.h"
 #include "utilitaires/lireLigne.h"
-#include "avion/creerAvion.h"
-#include "avion/aficherAvion.h"
+#include "avion/avionCreer.h"
+#include "avion/avionAfficher.h"
 #include "avion/avionChangerDirection.h"
 #include "affichage/affichage_fonction.h"
 #include "affichage/loader.h"
@@ -19,8 +19,8 @@
 int main (void) {
     initAleatoire(); // on initialise l'aléatoire
 
-    avion* a = creerAvion();
-    avion* b = creerAvion();
+    avion* a = avionCreer();
+    avion* b = avionCreer();
 
     // sleep(5);
     affichageNettoyerEcran();

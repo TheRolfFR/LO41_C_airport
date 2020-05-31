@@ -8,7 +8,7 @@
 #include <string.h>
 #include "utilitaires/aleatoire.h"
 #include "utilitaires/lireLigne.h"
-#include "avion/creerAvion.h"
+#include "avion/avionCreer.h"
 #include "constantes.h"
 
 int prompt (void) {

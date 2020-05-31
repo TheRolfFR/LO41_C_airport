@@ -6,7 +6,8 @@
 #define LO41_PROJET_AVIONCHANGERDIRECTION_H
 
 #include <stdbool.h>
-#include "choisirDestination.h"
+#include "avionChoisirDestination.h"
+#include "../utilitaires/date.h"
 
 // fonction permettant de changer de direction : atterrissage->décollage mais aussi décollage->atterrissage
 void avionChangerDirection(avion *a) {
@@ -14,7 +15,7 @@ void avionChangerDirection(avion *a) {
         return;
 
     // on le change de destination
-    choisirDestination(a);
+    avionChoisirDestination(a);
 
     // si on passe de atterrissage a décollage
     if(a->estArrivant) {
@@ -23,6 +24,9 @@ void avionChangerDirection(avion *a) {
         // sinon il nous faut dire si oui ou non c'est un atterissage force
         avionAtterissageForce(a);
     }
+
+    // il nous faut aussi changer la datte
+    mettreDate(a);
 
     a->estArrivant = !a->estArrivant; // on inverse entre atterrissage et décollage
 }

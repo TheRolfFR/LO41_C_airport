@@ -2,14 +2,14 @@
 // Created by TheRolf on 15/05/2020.
 //
 
-#ifndef LO41_PROJET_AFICHERAVION_H
-#define LO41_PROJET_AFICHERAVION_H
+#ifndef LO41_PROJET_AVIONAFFICHER_H
+#define LO41_PROJET_AVIONAFFICHER_H
 
 #include <stdio.h>
 #include "avion.h"
 #include "../utilitaires/date.h"
 
-void afficherAvion(avion* a) {
+void avionAfficher(avion* a) {
     // départ ou arrivée
     if(a->estArrivant) {
         printf("%7s", "ARRIVEE");
@@ -33,4 +33,4 @@ void afficherAvion(avion* a) {
     afficherDate(a->date);printf("\n");
 }
 
-#endif //LO41_PROJET_AFICHERAVION_H
+#endif //LO41_PROJET_AVIONAFFICHER_H
