@@ -39,15 +39,15 @@ char* destionations_fr[NB_DESTINATIONS_FRANCE] = {
 #define NB_DESTINATIONS_INTER 10
 char* destinations_inter[NB_DESTINATIONS_INTER] = {
         "Allemagne",
-        "Afrique du Sud",
-        "Canada",
-        "Chine",
+        "Belgique",
         "Espagne",
-        "Etats-Unis",
-        "Maroc",
+        "Estonie",
+        "Grece",
+        "Italie",
         "Norvege",
         "Portugal",
-        "Tasmanie"
+        "Royaume-Uni",
+        "Ukraine"
 };
 
 // pistes
