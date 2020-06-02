@@ -18,6 +18,7 @@ typedef struct struct_avion {
     int fuel;
     bool grosAvion;
     bool atterissageUrgent;
+    time_t temps;
     struct tm *date;
 } avion;
 

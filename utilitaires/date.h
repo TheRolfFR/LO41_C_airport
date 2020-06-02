@@ -12,13 +12,16 @@
 #include <stdio.h>
 
 void mettreDate(avion* a) {
-    time_t t = time(NULL);
+    if(a == NULL)
+        return;
+
+    a->temps = time(NULL);
 
     // on ajoute entre AJOUT_HORAIRE_SEC_MIN et AJOUT_HORAIRE_SEC_MAX secondes
-    t += aleatoireEntierRange(AJOUT_HORAIRE_SEC_MIN, AJOUT_HORAIRE_SEC_MAX);
+    a->temps += aleatoireEntierRange(AJOUT_HORAIRE_SEC_MIN, AJOUT_HORAIRE_SEC_MAX);
 
     // on met la date
-    a->date = localtime(&t);
+    a->date = localtime(&a->temps);
 }
 
 void afficherDate(struct tm* date) {
