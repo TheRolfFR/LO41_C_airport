@@ -65,6 +65,22 @@ void *controleurThread(void* arg) {
     // on doit faire une première génération du planning
     premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, tableauAvions);
 
+    // PREMIERS LANCEMENTS
+
+    // grande piste
+    if(!pisteEstOccupee(&arguments->mesPistes[0]) && listeAttenteGrandePiste[0] != NULL) {
+        arguments->mesPistes[0].avionEnCours = listeAttenteGrandePiste[0];
+        pisteAfficher(&arguments->mesPistes[0]);
+        mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0]->numero);
+    }
+
+    // petite piste
+    if(!pisteEstOccupee(&arguments->mesPistes[1]) && listeAttentePetitePiste[0] != NULL) {
+        arguments->mesPistes[1].avionEnCours = listeAttentePetitePiste[0];
+        pisteAfficher(&arguments->mesPistes[1]);
+        mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttentePetitePiste[0]->numero);
+    }
+
     // "enfin" on peut lancer la boucle infinie qui lancera la gestion des pistes
     while(true) {
         // on attend l'évènement de libération d'une piste QUELCONQUE, bref d'une action d'UN avion quelconque
@@ -81,17 +97,17 @@ void *controleurThread(void* arg) {
         pthread_mutex_unlock(&arguments->mutexAvions.mutex);
 
         // grande piste
-        if(pisteEstOccupee(&arguments->mesPistes[0])) {
+        if(!pisteEstOccupee(&arguments->mesPistes[0]) && listeAttenteGrandePiste[0] != NULL) {
             arguments->mesPistes[0].avionEnCours = listeAttenteGrandePiste[0];
             pisteAfficher(&arguments->mesPistes[0]);
             mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0]->numero);
         }
 
         // petite piste
-        if(pisteEstOccupee(&arguments->mesPistes[1])) {
-            arguments->mesPistes[1].avionEnCours = listeAttenteGrandePiste[1];
+        if(!pisteEstOccupee(&arguments->mesPistes[1]) && listeAttentePetitePiste[0] != NULL) {
+            arguments->mesPistes[1].avionEnCours = listeAttentePetitePiste[0];
             pisteAfficher(&arguments->mesPistes[1]);
-            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[1]->numero);
+            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttentePetitePiste[0]->numero);
         }
 
         // on attend de nouveau
