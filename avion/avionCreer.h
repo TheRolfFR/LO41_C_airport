@@ -38,7 +38,7 @@ avion* avionCreer(int numero) {
     return resultat;
 }
 
-void detruireAvion(avion* a) {
+void avionDetruire(avion* a) {
     free(a);
 }
 

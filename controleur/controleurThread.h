@@ -41,7 +41,7 @@ void *controleurThread(void* arg) {
     msg_avion msgAvion;
     for(int i = 0; i < NB_AVIONS; ++i) {
         // attente de messages IPC et ajout des avions à la liste
-        msgRecevoir(arguments->idFileMsgAvions, &msgAvion, MSG_AVIONS_TYPE);
+        msgRecevoir(arguments->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR, MSG_AVIONS_TYPE);
 
         // ajout des nouveaux avions à la liste
         tableauAvions[i] = msgAvion.a;

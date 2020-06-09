@@ -42,6 +42,13 @@ void traitantSigint(int num) {
             threadTuer(&mesAvions[i]);
         }
 
+        // détruire les avions
+        msg_avion msgAvion;
+        for(int i = 0; i < NB_AVIONS; ++i) {
+            msgRecevoir(mesArguments.idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR, MSG_AVIONS_MAIN_TYPE);
+            avionDetruire(msgAvion.a);
+        }
+
         threadTuer(&monControleur);
 
         arreterFileMessages();

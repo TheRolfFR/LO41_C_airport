@@ -31,6 +31,8 @@ void *avionThread(void *arg) {
 
     msg_avion msgAvion = { MSG_AVIONS_TYPE, a };
     msgEnvoyer(argumentsThread->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR);
+    msgAvion.type = MSG_AVIONS_MAIN_TYPE;
+    msgEnvoyer(argumentsThread->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR); // on communique au main l'avion cree
 
     // boucle infinie de l'avion
     while (true) {
@@ -49,6 +51,8 @@ void *avionThread(void *arg) {
         // on change la direction
         avionChangerDirection(a);
     }
+
+    avionDetruire(a);
 
     return NULL;
 }

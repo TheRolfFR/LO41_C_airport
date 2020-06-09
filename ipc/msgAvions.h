@@ -14,6 +14,7 @@ typedef struct {
 } msg_avion;
 
 #define MSG_AVIONS_TYPE 1
+#define MSG_AVIONS_MAIN_TYPE 2
 #define MSG_AVIONS_LONGUEUR (sizeof(msg_avion) - sizeof(long))
 
 #endif //LO41_PROJET_MSGAVIONS_H
