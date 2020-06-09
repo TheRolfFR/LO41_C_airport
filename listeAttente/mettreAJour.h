@@ -37,8 +37,8 @@ void traiterAvion(avion *maPiste[NB_AVIONS], avion *lAutrePiste[NB_AVIONS], avio
 // il n'y a pas de première fois, on retraite quand même le premier avion
 void mettreAJour(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVIONS], avion *misAJour) {
     // on sait quand traiter les listes
-    avion* traite[NB_AVIONS];
-    memset(traite, 0, sizeof(bool)*NB_AVIONS);
+    avion *traite[NB_AVIONS];
+    memset(traite, 0, sizeof(bool) * NB_AVIONS);
 
     // le premier avion est particulier car avant
 
@@ -47,7 +47,7 @@ void mettreAJour(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVIONS], a
     bool jeSuisSurGrandePiste = listeAttenteAvion(grandeListe, petiteListe, misAJour);
 
     // si c'est la grande on a moins de chance de passer sur la petite
-    if(jeSuisSurGrandePiste) {
+    if (jeSuisSurGrandePiste) {
         traiterAvion(grandeListe, petiteListe, misAJour, jeSuisSurGrandePiste);
     } else {
         traiterAvion(petiteListe, grandeListe, misAJour, jeSuisSurGrandePiste);
@@ -57,10 +57,10 @@ void mettreAJour(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVIONS], a
     ++traiteindex;
 
     int i = 0;
-    avion* a;
-    while(grandeListe[i] != NULL) {
+    avion *a;
+    while (grandeListe[i] != NULL) {
         a = grandeListe[i];
-        if(!avionDansListe(a, traite)) {
+        if (!avionDansListe(a, traite)) {
             traiterAvion(grandeListe, petiteListe, a, true);
             traite[traiteindex] = a;
             ++traiteindex;
@@ -70,9 +70,9 @@ void mettreAJour(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVIONS], a
     }
 
     i = 0;
-    while(petiteListe[i] != NULL) {
+    while (petiteListe[i] != NULL) {
         a = petiteListe[i];
-        if(!avionDansListe(a, traite)) {
+        if (!avionDansListe(a, traite)) {
             traiterAvion(petiteListe, grandeListe, a, false);
             traite[traiteindex] = a;
             ++traiteindex;
@@ -80,5 +80,6 @@ void mettreAJour(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVIONS], a
 
         ++i;
     }
+}
 
 #endif //LO41_PROJET_METTREAJOUR_H

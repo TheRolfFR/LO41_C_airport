@@ -46,9 +46,9 @@ void *avionThread(void *arg) {
         sleep(ACTION_DUREE);
 
         if(a->estArrivant) {
-            tarmacAjouterAvion(&argumentsThread->monTarmac);
+            tarmacAjouterAvion(&argumentsThread->monTarmac, a);
         } else {
-            tarmacSupprimerAvion(&argumentsThread->monTarmac);
+            tarmacSupprimerAvion(&argumentsThread->monTarmac, a);
         }
 
         // on change la direction

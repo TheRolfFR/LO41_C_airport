@@ -21,7 +21,7 @@ void mutexAvionsLibererAvion(mutex_avions_struct *m, int indexAvion) {
     pthread_cond_signal(&m->conditionsAvion[indexAvion]);
 
     // on broadcast comme quoi un avions a été changé
-    pthread_cond_broadcast(m->avionQuelconque);
+    pthread_cond_broadcast(&m->avionQuelconque);
 
     // on unlock l'acces au mutex
     pthread_mutex_unlock(&m->mutex);
