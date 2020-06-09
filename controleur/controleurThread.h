@@ -16,6 +16,7 @@
 #include "../piste/pisteOcupee.h"
 #include "../mutex/avions/mutexAvionsLibererAvion.h"
 #include "../listeAttente/premiereGeneration.h"
+#include "../listeAttente/mettreAJour.h"
 #include <pthread.h>
 
 /// Thread du controleur, doit être capapble de tout gérer
@@ -66,11 +67,13 @@ void *controleurThread(void* arg) {
 
     // "enfin" on peut lancer la boucle infinie qui lancera la gestion des pistes
     while(true) {
-        // on attend l'évènement de libération d'une piste QUELCONQUE, bref d'une action d'avion quelconque
-        pthread_cond_wait(&arguments->mutexAvions.avionQuelconque, &arguments->mutexAvions.mutex);
+        // on attend l'évènement de libération d'une piste QUELCONQUE, bref d'une action d'UN avion quelconque
+        // ET D'UN SEUL, et il faudrait savoir lequel qu'on le retraite
+        msgRecevoir(arguments->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR, MSG_AVIONS_TYPE);
 
         // on revoit la génération du planning
         // pour les deux pistes
+        mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, msgAvion.a);
 
         // on réalise des actions sur les pistes
 
