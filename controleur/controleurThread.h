@@ -15,6 +15,7 @@
 #include "../listeAttente/listeAttenteCreer.h"
 #include "../piste/pisteOcupee.h"
 #include "../mutex/avions/mutexAvionsLibererAvion.h"
+#include "../listeAttente/premiereGeneration.h"
 #include <pthread.h>
 
 /// Thread du controleur, doit être capapble de tout gérer
@@ -55,13 +56,13 @@ void *controleurThread(void* arg) {
     pisteInitialiser(&arguments->mesPistes[1], false);
 
     // on doit creer nos deux listes d'attente
-    liste_attente_struct listeAttenteGrandePiste[NB_AVIONS];
-    liste_attente_struct listeAttentePetitePiste[NB_AVIONS];
+    avion* listeAttenteGrandePiste[NB_AVIONS];
+    avion* listeAttentePetitePiste[NB_AVIONS];
     listeAttenteCreer(listeAttenteGrandePiste);
     listeAttenteCreer(listeAttentePetitePiste);
 
     // on doit faire une première génération du planning
-
+    premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, tableauAvions);
 
     // "enfin" on peut lancer la boucle infinie qui lancera la gestion des pistes
     while(true) {
@@ -78,16 +79,16 @@ void *controleurThread(void* arg) {
 
         // grande piste
         if(pisteEstOccupee(&arguments->mesPistes[0])) {
-            arguments->mesPistes[0].avionEnCours = listeAttenteGrandePiste[0].a;
+            arguments->mesPistes[0].avionEnCours = listeAttenteGrandePiste[0];
             pisteAfficher(&arguments->mesPistes[0]);
-            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0].a->numero);
+            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0]->numero);
         }
 
         // petite piste
         if(pisteEstOccupee(&arguments->mesPistes[1])) {
-            arguments->mesPistes[1].avionEnCours = listeAttenteGrandePiste[1].a;
+            arguments->mesPistes[1].avionEnCours = listeAttenteGrandePiste[1];
             pisteAfficher(&arguments->mesPistes[1]);
-            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[1].a->numero);
+            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[1]->numero);
         }
 
         // on attend de nouveau
