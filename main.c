@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/msg.h>
+#include <sys/ipc.h>
 #include "utilitaires/aleatoire.h"
 #include "mutex/avions/mutex_avions_struct.h"
 #include "arguments/argument_thread_struct.h"
@@ -57,11 +58,11 @@ void traitantSigint(int num) {
     }
 }
 
-int main (void) {
+int main (int argc, char *argv[]) {
     initAleatoire(); // on initialise l'aléatoire
 
     // tenter de générer une file de messages
-    if((mesArguments.idFileMsgAvions = msgget(CLE_FILE_MESSAGES, 0)) == -1)
+    if((mesArguments.idFileMsgAvions = msgget(ftok(argv[0], 'A'), IPC_CREAT | 0600)) == -1)
         erreur("Erreur lors de la création de la file de message.");
 
     // initialiser les arguments généraux
