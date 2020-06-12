@@ -15,7 +15,7 @@
 /// \param typeMessage le type du message à recevoir
 /// \return -1 si il y a une erreur
 int msgRecevoir(int idFileMessage, void *pointeurMessage, int tailleMessage, long typeMessage) {
-    return msgrcv(idFileMessage, &pointeurMessage, tailleMessage, 1, 0);
+    return msgrcv(idFileMessage, &pointeurMessage, tailleMessage, typeMessage, 0);
 }
 
 #endif //LO41_PROJET_MSGRECEVOIR_H

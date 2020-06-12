@@ -62,7 +62,7 @@ int main (int argc, char *argv[]) {
     initAleatoire(); // on initialise l'aléatoire
 
     // tenter de générer une file de messages
-    if((mesArguments.idFileMsgAvions = msgget(ftok(argv[0], 'A'), IPC_CREAT | 0600)) == -1)
+    if((mesArguments.idFileMsgAvions = msgget(ftok(argv[0], 'S'), IPC_CREAT | 0600)) == -1)
         erreur("Erreur lors de la création de la file de message.");
 
     // initialiser les arguments généraux
