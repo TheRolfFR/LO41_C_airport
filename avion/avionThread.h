@@ -25,22 +25,30 @@ void *avionThread(void *arg) {
     argument_thread_avion *arguments = (argument_thread_avion *) arg;
     argument_thread_struct *argumentsThread = arguments->argumentsThread;
 
-    avion *a = avionCreer(arguments->index);
-
     // on attend l'accès à la ressource
     pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);
 
+    int index = arguments->index;
+
+    avion *a = avionCreer(index);
+    argumentsThread->mutexAvions.nbAvionsPrets++;
+
     argumentsThread->mutexAvions.mesAvions[arguments->index] = a;
 
+    int ap = argumentsThread->mutexAvions.nbAvionsPrets;
+    printf("Avions prets : %d\n", ap);
+    if(ap == NB_AVIONS) {
+        printf("envoi du signal que tous les avions sont prets\n");
+        pthread_cond_signal(&argumentsThread->mutexAvions.avionsPrets);
+    }
     // on dit au controleur qu'on a mis notre avion
-    pthread_cond_signal(&argumentsThread->mutexAvions.nouvelAvion);
     pthread_mutex_unlock(&argumentsThread->mutexAvions.mutex);
 
     // boucle infinie de l'avion
     pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);
     while (true) {
         // en premier on attend d'être autorisé
-        pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[arguments->index], &argumentsThread->mutexAvions.mutex);
+        pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[index], &argumentsThread->mutexAvions.mutex);
 
         // faire l'action (décollage / atterrissage)
         sleep(ACTION_DUREE);

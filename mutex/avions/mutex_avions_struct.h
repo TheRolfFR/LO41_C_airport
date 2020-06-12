@@ -19,8 +19,9 @@ typedef struct s_mutex_avions {
     pthread_cond_t avionQuelconque;
 
     avion* mesAvions[NB_AVIONS];
-    pthread_cond_t nouvelAvion;
+    pthread_cond_t avionsPrets;
     avion* dernierAvionModifie;
+    int nbAvionsPrets;
 } mutex_avions_struct;
 
 #endif //LO41_PROJET_MUTEX_AVIONS_STRUCT_H

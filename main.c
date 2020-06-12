@@ -61,12 +61,13 @@ int main (int argc, char *argv[]) {
 
     // on initialiser les mutex et les conditions
     mesArguments.mutexAvions.mutex = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
-    mesArguments.mutexAvions.nouvelAvion = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
+    mesArguments.mutexAvions.avionsPrets = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
     mesArguments.mutexAvions.avionQuelconque = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
     for(int i = 0; i < NB_AVIONS; ++i) {
         mesArguments.mutexAvions.conditionsAvion[i] = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
     }
     mesArguments.mutexAvions.atterissageForce = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
+    mesArguments.mutexAvions.nbAvionsPrets = 0;
 
     // initialiser les arguments généraux
     tarmacInitialiser(&mesArguments.monTarmac);

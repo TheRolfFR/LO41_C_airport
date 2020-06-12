@@ -37,14 +37,6 @@ void *controleurThread(void* arg) {
      * cependant on va attendre d'avoir tous les avions avant de pouvoir continuer
      */
 
-    pthread_mutex_lock(mutex);
-    for(int i = 0; i < NB_AVIONS; ++i) {
-        int ret = pthread_cond_wait(&arguments->mutexAvions.nouvelAvion, mutex);
-        printf("%d\n", i);
-        printf("love u bb <3\n");
-        pthread_mutex_unlock(mutex);
-    }
-
     // on attend d'avoir la ressource critique
     pthread_mutex_lock(mutex);
 
@@ -60,6 +52,11 @@ void *controleurThread(void* arg) {
     avion* listeAttentePetitePiste[NB_AVIONS];
     listeAttenteCreer(listeAttenteGrandePiste);
     listeAttenteCreer(listeAttentePetitePiste);
+
+    pthread_mutex_unlock(mutex);
+    pthread_cond_wait(&arguments->mutexAvions.avionsPrets, mutex);
+
+    printf("Tous les avions sont prets\n");
 
     // on doit faire une première génération du planning
     premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.mesAvions);
