@@ -44,10 +44,8 @@ void traitantSigint(int num) {
         }
 
         // détruire les avions
-        msg_avion msgAvion;
         for(int i = 0; i < NB_AVIONS; ++i) {
-            msgRecevoir(mesArguments.idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR, MSG_AVIONS_MAIN_TYPE);
-            avionDetruire(msgAvion.a);
+            avionDetruire(mesArguments.mutexAvions.mesAvions[i]);
         }
 
         threadTuer(&monControleur);
@@ -61,9 +59,14 @@ void traitantSigint(int num) {
 int main (int argc, char *argv[]) {
     initAleatoire(); // on initialise l'aléatoire
 
-    // tenter de générer une file de messages
-    if((mesArguments.idFileMsgAvions = msgget(ftok(argv[0], 'S'), IPC_CREAT | 0600)) == -1)
-        erreur("Erreur lors de la création de la file de message.");
+    // on initialiser les mutex et les conditions
+    mesArguments.mutexAvions.mutex = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    mesArguments.mutexAvions.nouvelAvion = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
+    mesArguments.mutexAvions.avionQuelconque = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
+    for(int i = 0; i < NB_AVIONS; ++i) {
+        mesArguments.mutexAvions.conditionsAvion[i] = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
+    }
+    mesArguments.mutexAvions.atterissageForce = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
 
     // initialiser les arguments généraux
     tarmacInitialiser(&mesArguments.monTarmac);

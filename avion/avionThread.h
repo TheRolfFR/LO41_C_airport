@@ -11,8 +11,6 @@
 #include "avion.h"
 #include "avionCreer.h"
 #include "../arguments/argument_thread_avion.h"
-#include "../ipc/msgEnvoyer.h"
-#include "../ipc/msgAvions.h"
 #include "avionChangerDirection.h"
 #include "../tarmac/tarmacAjouterAvion.h"
 #include "../tarmac/tarmacSupprimerAvion.h"
@@ -29,15 +27,17 @@ void *avionThread(void *arg) {
 
     avion *a = avionCreer(arguments->index);
 
-    msg_avion msgAvion = { MSG_AVIONS_TYPE, a };
-    msgEnvoyer(argumentsThread->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR);
-    msgAvion.type = MSG_AVIONS_MAIN_TYPE;
-    msgEnvoyer(argumentsThread->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR); // on communique au main l'avion cree
+    // on attend l'accès à la ressource
+    pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);
 
-    // on remet le type au type normal
-    msgAvion.type = MSG_AVIONS_TYPE;
+    argumentsThread->mutexAvions.mesAvions[arguments->index] = a;
+
+    // on dit au controleur qu'on a mis notre avion
+    pthread_cond_signal(&argumentsThread->mutexAvions.nouvelAvion);
+    pthread_mutex_unlock(&argumentsThread->mutexAvions.mutex);
 
     // boucle infinie de l'avion
+    pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);
     while (true) {
         // en premier on attend d'être autorisé
         pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[arguments->index], &argumentsThread->mutexAvions.mutex);
@@ -54,8 +54,12 @@ void *avionThread(void *arg) {
         // on change la direction
         avionChangerDirection(a);
 
-        // on envoie l'avion mis a jour
-        msgEnvoyer(argumentsThread->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR);
+        // on envoie le dernier avion modifie
+        argumentsThread->mutexAvions.dernierAvionModifie = a;
+        pthread_cond_signal(&argumentsThread->mutexAvions.avionQuelconque);
+
+        // on libère la ressource critique
+        pthread_mutex_unlock(&argumentsThread->mutexAvions.mutex);
     }
 
     avionDetruire(a);

@@ -9,8 +9,6 @@
 #include "../constantes.h"
 #include "../piste/piste.h"
 #include "../arguments/argument_thread_struct.h"
-#include "../ipc/msgAvions.h"
-#include "../ipc/msgRecevoir.h"
 #include "../listeAttente/liste_attente_struct.h"
 #include "../listeAttente/listeAttenteCreer.h"
 #include "../piste/pisteOcupee.h"
@@ -31,23 +29,24 @@ void *controleurThread(void* arg) {
      * - les pistes
      */
     argument_thread_struct *arguments = (argument_thread_struct *) arg;
+    pthread_mutex_t* mutex = &arguments->mutexAvions.mutex;
 
-    // on doit créer un tableau d'avions
-    // attention: la liste d'avions est différente des deux listes d'attentes pour les pistesz
-    avion *tableauAvions[NB_AVIONS];
-
+    // pas besoin de créer un tableau d'avions, on attend jusque qu'il se remplisse
     /*
      * on ne le vide pas car on s'en fiche totalement
      * cependant on va attendre d'avoir tous les avions avant de pouvoir continuer
      */
-    msg_avion msgAvion;
-    for(int i = 0; i < NB_AVIONS; ++i) {
-        // attente de messages IPC et ajout des avions à la liste
-        msgRecevoir(arguments->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR, MSG_AVIONS_TYPE);
 
-        // ajout des nouveaux avions à la liste
-        tableauAvions[i] = msgAvion.a;
+    pthread_mutex_lock(mutex);
+    for(int i = 0; i < NB_AVIONS; ++i) {
+        int ret = pthread_cond_wait(&arguments->mutexAvions.nouvelAvion, mutex);
+        printf("%d\n", i);
+        printf("love u bb <3\n");
+        pthread_mutex_unlock(mutex);
     }
+
+    // on attend d'avoir la ressource critique
+    pthread_mutex_lock(mutex);
 
     /*
      * On doit aussi avoir des références aux pistes et pour les controler
@@ -63,7 +62,7 @@ void *controleurThread(void* arg) {
     listeAttenteCreer(listeAttentePetitePiste);
 
     // on doit faire une première génération du planning
-    premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, tableauAvions);
+    premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.mesAvions);
 
     // PREMIERS LANCEMENTS
 
@@ -82,14 +81,16 @@ void *controleurThread(void* arg) {
     }
 
     // "enfin" on peut lancer la boucle infinie qui lancera la gestion des pistes
+    avion* dernierAvionModifie;
     while(true) {
         // on attend l'évènement de libération d'une piste QUELCONQUE, bref d'une action d'UN avion quelconque
         // ET D'UN SEUL, et il faudrait savoir lequel qu'on le retraite
-        msgRecevoir(arguments->idFileMsgAvions, &msgAvion, MSG_AVIONS_LONGUEUR, MSG_AVIONS_TYPE);
+        pthread_cond_wait(&arguments->mutexAvions.avionQuelconque, &arguments->mutexAvions.mutex);
+        dernierAvionModifie = arguments->mutexAvions.dernierAvionModifie;
 
         // on revoit la génération du planning
         // pour les deux pistes
-        mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, msgAvion.a);
+        mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, dernierAvionModifie);
 
         // on réalise des actions sur les pistes
 
