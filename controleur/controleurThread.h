@@ -97,7 +97,8 @@ void *controleurThread(void* arg) {
     while(true) {
         // on attend l'évènement de libération d'une piste QUELCONQUE, bref d'une action d'UN avion quelconque
         // ET D'UN SEUL, et il faudrait savoir lequel qu'on le retraite
-        pthread_cond_wait(&arguments->mutexAvions.avionQuelconque, &arguments->mutexAvions.mutex);
+        if(arguments->mutexAvions.dernierAvionModifieGrandePiste == NULL && arguments->mutexAvions.dernierAvionModifiePetitePiste == NULL)
+            pthread_cond_wait(&arguments->mutexAvions.avionQuelconque, &arguments->mutexAvions.mutex);
 
         // on revoit la génération du planning
         // pour les deux pistes
@@ -105,7 +106,7 @@ void *controleurThread(void* arg) {
         // on réalise des actions sur 1 piste
 
         // grande piste
-        if(arguments->mutexAvions.dernierAvionModifieGrandePiste != NULL && !pisteEstOccupee(&arguments->mesPistes[0]) && listeAttenteGrandePiste[0] != NULL) {
+        if(arguments->mutexAvions.dernierAvionModifieGrandePiste != NULL && listeAttenteGrandePiste[0] != NULL) {
             mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.dernierAvionModifieGrandePiste);
             arguments->mutexAvions.dernierAvionModifieGrandePiste = NULL;
 
@@ -115,7 +116,7 @@ void *controleurThread(void* arg) {
             pthread_mutex_unlock(mutex);
             mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0], true);
             pthread_mutex_lock(mutex);
-        } else if(arguments->mutexAvions.dernierAvionModifiePetitePiste != NULL && !pisteEstOccupee(&arguments->mesPistes[1]) && listeAttentePetitePiste[0] != NULL) {
+        } else if(arguments->mutexAvions.dernierAvionModifiePetitePiste != NULL && listeAttentePetitePiste[0] != NULL) {
             mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.dernierAvionModifiePetitePiste);
             arguments->mutexAvions.dernierAvionModifiePetitePiste = NULL;
 

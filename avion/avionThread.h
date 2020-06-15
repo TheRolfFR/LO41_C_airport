@@ -36,12 +36,12 @@ void *avionThread(void *arg) {
     avion *a = avionCreer(index);
     argumentsThread->mutexAvions.mesAvions[index] = a;
     argumentsThread->mutexAvions.nbAvionsPrets++;
-    /*pthread_mutex_unlock(mutex);
+    pthread_mutex_unlock(mutex);
 
     // boucle infinie de l'avion
-    pthread_mutex_lock(mutex);*/
     while (true) {
         // en premier on attend d'être autorisé
+        pthread_mutex_lock(mutex);
         pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[index], mutex);
 
         // faire l'action (décollage / atterrissage)
