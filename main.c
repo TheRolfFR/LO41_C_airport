@@ -13,6 +13,7 @@
 #include "controleur/controleurThread.h"
 #include "tarmac/tarmacAfficher.h"
 #include "affichage/affichage_fonction_variable.h"
+#include "tarmac/tarmacAjouterAffichage.h"
 #include <signal.h>
 
 // j'ai besoin de quelques choses :
@@ -86,7 +87,7 @@ int main (int argc, char *argv[]) {
     affichageAjouter(&teteAffichage, &mesArguments.mesPistes[1].affichage);
 
     // on ajoute le tarmac à l'affichage
-    affichageAjouter(&teteAffichage, &mesArguments.monTarmac.affichage);
+    tarmacAjouterAffichage(&teteAffichage, &mesArguments.monTarmac);
 
     // on affiche nos pistes et notre tarmac
     affichageNettoyerEcran();
