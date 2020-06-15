@@ -31,21 +31,12 @@ void *avionThread(void *arg) {
     int index = arguments->index;
 
     avion *a = avionCreer(index);
-    argumentsThread->mutexAvions.nbAvionsPrets++;
-
     argumentsThread->mutexAvions.mesAvions[arguments->index] = a;
-
-    int ap = argumentsThread->mutexAvions.nbAvionsPrets;
-    printf("Avions prets : %d\n", ap);
-    if(ap == NB_AVIONS) {
-        printf("envoi du signal que tous les avions sont prets\n");
-        pthread_cond_signal(&argumentsThread->mutexAvions.avionsPrets);
-    }
-    // on dit au controleur qu'on a mis notre avion
-    pthread_mutex_unlock(&argumentsThread->mutexAvions.mutex);
+    argumentsThread->mutexAvions.nbAvionsPrets++;
+    /*pthread_mutex_unlock(&argumentsThread->mutexAvions.mutex);
 
     // boucle infinie de l'avion
-    pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);
+    pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);*/
     while (true) {
         // en premier on attend d'être autorisé
         pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[index], &argumentsThread->mutexAvions.mutex);

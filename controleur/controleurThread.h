@@ -54,9 +54,15 @@ void *controleurThread(void* arg) {
     listeAttenteCreer(listeAttentePetitePiste);
 
     pthread_mutex_unlock(mutex);
-    pthread_cond_wait(&arguments->mutexAvions.avionsPrets, mutex);
 
-    printf("Tous les avions sont prets\n");
+    int compteur = 0;
+    while(compteur != NB_AVIONS) {
+        pthread_mutex_lock(mutex);
+
+        compteur = arguments->mutexAvions.nbAvionsPrets;
+
+        pthread_mutex_unlock(mutex);
+    }
 
     // on doit faire une première génération du planning
     premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.mesAvions);
