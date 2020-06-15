@@ -11,6 +11,8 @@
 #include "thread/thread_lib.h"
 #include "avion/avionThread.h"
 #include "controleur/controleurThread.h"
+#include "tarmac/tarmacAfficher.h"
+#include "affichage/affichage_fonction_variable.h"
 #include <signal.h>
 
 // j'ai besoin de quelques choses :
@@ -27,6 +29,9 @@ thread_struct mesAvions[NB_AVIONS];
 
 // et une structure de thread pour notre controleur
 thread_struct monControleur;
+
+// affichage
+affichage_struct *teteAffichage;
 
 void arreterFileMessages() {
     // supprimer la file de message
@@ -75,6 +80,18 @@ int main (int argc, char *argv[]) {
     // initialiser mes pistes
     pisteInitialiser(&mesArguments.mesPistes[0], true);
     pisteInitialiser(&mesArguments.mesPistes[1], false);
+
+    // on ajoute les pistes à l'affichage
+    affichageAjouter(&teteAffichage, &mesArguments.mesPistes[0].affichage);
+    affichageAjouter(&teteAffichage, &mesArguments.mesPistes[1].affichage);
+
+    // on ajoute le tarmac à l'affichage
+    affichageAjouter(&teteAffichage, &mesArguments.monTarmac.affichage);
+
+    // on affiche nos pistes et notre tarmac
+    pisteAfficher(&mesArguments.mesPistes[0]);
+    pisteAfficher(&mesArguments.mesPistes[1]);
+    tarmacAfficher(&mesArguments.monTarmac);
 
     // on met les arguments généraux dans les arguments pour les avions
     argumentsMonAvion.argumentsThread = &mesArguments;
