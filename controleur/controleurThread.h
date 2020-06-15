@@ -116,7 +116,8 @@ void *controleurThread(void* arg) {
             pthread_mutex_unlock(mutex);
             mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0], true);
             pthread_mutex_lock(mutex);
-        } else if(arguments->mutexAvions.dernierAvionModifiePetitePiste != NULL && listeAttentePetitePiste[0] != NULL) {
+        }
+        if(arguments->mutexAvions.dernierAvionModifiePetitePiste != NULL && listeAttentePetitePiste[0] != NULL) {
             mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.dernierAvionModifiePetitePiste);
             arguments->mutexAvions.dernierAvionModifiePetitePiste = NULL;
 

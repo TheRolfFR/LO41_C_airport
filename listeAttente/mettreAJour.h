@@ -10,16 +10,25 @@
 #include "listeAttenteAvion.h"
 #include "../piste/pisteCompatible.h"
 #include "../avion/avionDansListe.h"
+#include "listeAttenteDecalerTot.h"
 #include <string.h>
 
 void traiterAvion(avion *maPiste[NB_AVIONS], avion *lAutrePiste[NB_AVIONS], avion* a, bool grandePiste) {
-    int i = 1;
+    int i = 0;
     avion *m = maPiste[i];
     while (avionComparer(a, m) > 0){ // METTRE APRES LE COMPARER EN DERNIER RECOURS
         // 1. je bouge tant que possible
 
         m = maPiste[i];
         ++i;
+    }
+
+    int maPosition = -1;
+    int j = 0;
+    while(j < NB_AVIONS && maPosition == -1) {
+        if(maPiste[j] == a)
+            maPosition = j;
+        ++j;
     }
 
     if(pisteCompatible(a, maPiste, lAutrePiste, grandePiste)) { // 2. ça vaut le coup de bouger
@@ -38,18 +47,19 @@ void traiterAvion(avion *maPiste[NB_AVIONS], avion *lAutrePiste[NB_AVIONS], avio
         listeAttenteDecalerTard(i, maPiste, NB_AVIONS); // decaler les avions a partir de ce rang
         lAutrePiste[i] = a; // le placer a cet endroit
     }
+    listeAttenteDecalerTot(maPosition, maPiste, NB_AVIONS); // je redécale tot sur ma piste
 }
 
 // il n'y a pas de première fois, on retraite quand même le premier avion
 void mettreAJour(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVIONS], avion *misAJour) {
     // on sait quand traiter les listes
     avion *traite[NB_AVIONS];
-    memset(traite, 0, sizeof(bool) * NB_AVIONS);
+    memset(traite, 0, sizeof(avion*) * NB_AVIONS);
 
     // le premier avion est particulier car avant
 
     // on recule jusqu'à ne plus pouvoir dans sa liste
-    // encore fauut il connaitre dans quelle liste on est
+    // encore faut il connaitre dans quelle liste on est
     bool jeSuisSurGrandePiste = listeAttenteAvion(grandeListe, petiteListe, misAJour);
 
     // si c'est la grande on a moins de chance de passer sur la petite
