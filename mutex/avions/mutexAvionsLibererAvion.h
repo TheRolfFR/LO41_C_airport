@@ -20,12 +20,6 @@ void mutexAvionsLibererAvion(mutex_avions_struct *m, avion* a, bool grandPiste) 
     // on libère l'avions en envoyant le signal
     pthread_cond_signal(&m->conditionsAvion[a->numero]);
 
-    if(grandPiste) {
-        m->dernierAvionModifieGrandePiste = a;
-    } else {
-        m->dernierAvionModifiePetitePiste = a;
-    }
-
     // on unlock l'acces au mutex
     pthread_mutex_unlock(&m->mutex);
 }

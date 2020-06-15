@@ -14,6 +14,7 @@
 #include "avionChangerDirection.h"
 #include "../tarmac/tarmacAjouterAvion.h"
 #include "../tarmac/tarmacSupprimerAvion.h"
+#include "avionPiste.h"
 
 /// Thread de "l'avion", doit être capapble de tout gérer
 /// tourne à l'infini
@@ -44,8 +45,11 @@ void *avionThread(void *arg) {
         pthread_mutex_lock(mutex);
         pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[index], mutex);
 
+        pthread_mutex_unlock(mutex);
         // faire l'action (décollage / atterrissage)
         sleep(ACTION_DUREE);
+
+        pthread_mutex_lock(mutex);
 
         if(a->estArrivant) {
             tarmacAjouterAvion(&argumentsThread->monTarmac, a);
@@ -55,6 +59,12 @@ void *avionThread(void *arg) {
 
         // on change la direction
         avionChangerDirection(a);
+
+        if(avionPiste(a, arguments)) {
+            argumentsThread->mutexAvions.dernierAvionModifieGrandePiste = a;
+        } else {
+            argumentsThread->mutexAvions.dernierAvionModifiePetitePiste = a;
+        }
 
         // on envoie le dernier avion modifie
         pthread_cond_signal(&argumentsThread->mutexAvions.avionQuelconque);
