@@ -89,6 +89,7 @@ int main (int argc, char *argv[]) {
     affichageAjouter(&teteAffichage, &mesArguments.monTarmac.affichage);
 
     // on affiche nos pistes et notre tarmac
+    affichageNettoyerEcran();
     pisteAfficher(&mesArguments.mesPistes[0]);
     pisteAfficher(&mesArguments.mesPistes[1]);
     tarmacAfficher(&mesArguments.monTarmac);
