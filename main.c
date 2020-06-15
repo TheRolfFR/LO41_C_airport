@@ -96,13 +96,16 @@ int main (int argc, char *argv[]) {
     pisteAfficher(&mesArguments.mesPistes[1]);
     tarmacAfficher(&mesArguments.monTarmac);
 
-    arguments[0].argumentsThread = &mesArguments;
-
     // démarrer tous les threads des avions
     for(int i = 0; i < NB_AVIONS; ++i) {
-        argumentAvionCopier(&arguments[0], &arguments[i]);
+        mesAvions[i].fonction = avionThread;
+
+        arguments[i].argumentsThread = &mesArguments;
         arguments[i].index = i;
-        lancerThread(&mesAvions[i], (void *) &arguments[i]);
+
+        argument_thread_avion *arg = &arguments[i];
+
+        lancerThread(&mesAvions[i], (void *) arg);
     }
 
     // démarrer le thread du contrôleur

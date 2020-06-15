@@ -10,18 +10,21 @@
 
 /// fonction permettant de liberer un avions à faire son action
 /// \param m la structure pour les avions
-void mutexAvionsLibererAvion(mutex_avions_struct *m, int indexAvion) {
-    if(m == NULL || indexAvion < 0 || indexAvion > NB_AVIONS)
+void mutexAvionsLibererAvion(mutex_avions_struct *m, avion* a, bool grandPiste) {
+    if(m == NULL || a->numero < 0 || a->numero >= NB_AVIONS)
         return;
 
     // on attend l'accès à la ressource
     pthread_mutex_lock(&m->mutex);
 
     // on libère l'avions en envoyant le signal
-    pthread_cond_signal(&m->conditionsAvion[indexAvion]);
+    pthread_cond_signal(&m->conditionsAvion[a->numero]);
 
-    // on broadcast comme quoi un avions a été changé
-    pthread_cond_broadcast(&m->avionQuelconque);
+    if(grandPiste) {
+        m->dernierAvionModifieGrandePiste = a;
+    } else {
+        m->dernierAvionModifiePetitePiste = a;
+    }
 
     // on unlock l'acces au mutex
     pthread_mutex_unlock(&m->mutex);

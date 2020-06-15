@@ -20,8 +20,8 @@ void premiereGeneration(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVI
 
     for(int i = 0; i < NB_AVIONS; ++i) {
         // on regarde quelle pistes sont compatibles
-        printf("\n%p\n", listeAvions[i]);
-        fflush(stdout);
+        /*printf("\n%p\n", listeAvions[i]);
+        fflush(stdout);*/
         grandAvion = listeAvions[i]->grosAvion;
 
         // si on ne peut faire que la grande piste, on ne parcourt qu'elle

@@ -14,14 +14,20 @@
 
 void traiterAvion(avion *maPiste[NB_AVIONS], avion *lAutrePiste[NB_AVIONS], avion* a, bool grandePiste) {
     int i = 1;
-    while (avionComparer(a, maPiste[i]) > 0 || a != maPiste[i]) // 1. je bouge tant que possible
+    avion *m = maPiste[i];
+    while (avionComparer(a, m) > 0){ // METTRE APRES LE COMPARER EN DERNIER RECOURS
+        // 1. je bouge tant que possible
+
+        m = maPiste[i];
         ++i;
+    }
 
     if(pisteCompatible(a, maPiste, lAutrePiste, grandePiste)) { // 2. ça vaut le coup de bouger
         // 3. on détermine où aller dans l'autre liste
         int mouvement = avionComparer(a, lAutrePiste[i]);
         i += mouvement;
-        while(mouvement != 0) {
+        int sens = mouvement;
+        while(i > 0 && mouvement != 0 && sens == mouvement) {
             mouvement = avionComparer(a, lAutrePiste[i]);
             i+= mouvement;
         } // 3. quand on a fini de bouger, on décale le reste vers la droite et on s'insère

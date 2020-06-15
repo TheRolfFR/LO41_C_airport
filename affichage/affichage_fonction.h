@@ -108,7 +108,7 @@ void trouverOffset(affichage_struct *affichage, int *x, int *y) {
 }
 
 void affichageNettoyerEcran() {
-    system("cls"); // on windows
+    // system("cls"); // on windows
     system("clear"); // on linux
 }
 

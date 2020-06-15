@@ -20,7 +20,8 @@ typedef struct s_mutex_avions {
 
     avion* mesAvions[NB_AVIONS];
     pthread_cond_t avionsPrets;
-    avion* dernierAvionModifie;
+    avion* dernierAvionModifieGrandePiste;
+    avion* dernierAvionModifiePetitePiste;
     int nbAvionsPrets;
 } mutex_avions_struct;
 

@@ -57,7 +57,6 @@ void *avionThread(void *arg) {
         avionChangerDirection(a);
 
         // on envoie le dernier avion modifie
-        argumentsThread->mutexAvions.dernierAvionModifie = a;
         pthread_cond_signal(&argumentsThread->mutexAvions.avionQuelconque);
 
         // on libère la ressource critique

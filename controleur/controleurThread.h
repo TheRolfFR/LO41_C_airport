@@ -69,7 +69,7 @@ void *controleurThread(void* arg) {
     // on doit faire une première génération du planning
     premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.mesAvions);
 
-    printf("Première génération terminée\n");fflush(stdout);
+    // printf("Première génération terminée\n");fflush(stdout);
 
     // PREMIERS LANCEMENTS
 
@@ -77,45 +77,54 @@ void *controleurThread(void* arg) {
     if(!pisteEstOccupee(&arguments->mesPistes[0]) && listeAttenteGrandePiste[0] != NULL) {
         arguments->mesPistes[0].avionEnCours = listeAttenteGrandePiste[0];
         pisteAfficher(&arguments->mesPistes[0]);
-        mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0]->numero);
+
+        pthread_mutex_unlock(mutex);
+        mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0], true);
+        pthread_mutex_lock(mutex);
     }
 
     // petite piste
     if(!pisteEstOccupee(&arguments->mesPistes[1]) && listeAttentePetitePiste[0] != NULL) {
         arguments->mesPistes[1].avionEnCours = listeAttentePetitePiste[0];
         pisteAfficher(&arguments->mesPistes[1]);
-        mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttentePetitePiste[0]->numero);
+
+        pthread_mutex_unlock(mutex);
+        mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttentePetitePiste[0], false);
+        pthread_mutex_lock(mutex);
     }
 
     // "enfin" on peut lancer la boucle infinie qui lancera la gestion des pistes
-    avion* dernierAvionModifie;
     while(true) {
         // on attend l'évènement de libération d'une piste QUELCONQUE, bref d'une action d'UN avion quelconque
         // ET D'UN SEUL, et il faudrait savoir lequel qu'on le retraite
         pthread_cond_wait(&arguments->mutexAvions.avionQuelconque, &arguments->mutexAvions.mutex);
-        dernierAvionModifie = arguments->mutexAvions.dernierAvionModifie;
 
         // on revoit la génération du planning
         // pour les deux pistes
-        mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, dernierAvionModifie);
-
-        // on réalise des actions sur les pistes
-
-        // tu débloques le mutex
-        pthread_mutex_unlock(&arguments->mutexAvions.mutex);
+        // C'EST UN SEUL A LA FOIS PAS PLUS
+        // on réalise des actions sur 1 piste
 
         // grande piste
-        if(!pisteEstOccupee(&arguments->mesPistes[0]) && listeAttenteGrandePiste[0] != NULL) {
+        if(arguments->mutexAvions.dernierAvionModifieGrandePiste != NULL && !pisteEstOccupee(&arguments->mesPistes[0]) && listeAttenteGrandePiste[0] != NULL) {
+            mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.dernierAvionModifieGrandePiste);
+            arguments->mutexAvions.dernierAvionModifieGrandePiste = NULL;
+
             arguments->mesPistes[0].avionEnCours = listeAttenteGrandePiste[0];
             pisteAfficher(&arguments->mesPistes[0]);
-            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0]->numero);
-        }
 
-        // petite piste
-        if(!pisteEstOccupee(&arguments->mesPistes[1]) && listeAttentePetitePiste[0] != NULL) {
+            pthread_mutex_unlock(mutex);
+            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttenteGrandePiste[0], true);
+            pthread_mutex_lock(mutex);
+        } else if(arguments->mutexAvions.dernierAvionModifiePetitePiste != NULL && !pisteEstOccupee(&arguments->mesPistes[1]) && listeAttentePetitePiste[0] != NULL) {
+            mettreAJour(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.dernierAvionModifiePetitePiste);
+            arguments->mutexAvions.dernierAvionModifiePetitePiste = NULL;
+
             arguments->mesPistes[1].avionEnCours = listeAttentePetitePiste[0];
             pisteAfficher(&arguments->mesPistes[1]);
-            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttentePetitePiste[0]->numero);
+
+            pthread_mutex_unlock(mutex);
+            mutexAvionsLibererAvion(&arguments->mutexAvions, listeAttentePetitePiste[0], false);
+            pthread_mutex_lock(mutex);
         }
 
         // on attend de nouveau
