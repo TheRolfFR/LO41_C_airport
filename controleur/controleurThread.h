@@ -55,7 +55,7 @@ void *controleurThread(void* arg) {
 
     pthread_mutex_unlock(mutex);
 
-    int compteur = 0;
+    int compteur;
     while(compteur != NB_AVIONS) {
         pthread_mutex_lock(mutex);
 
@@ -64,8 +64,12 @@ void *controleurThread(void* arg) {
         pthread_mutex_unlock(mutex);
     }
 
+    pthread_mutex_lock(mutex);
+
     // on doit faire une première génération du planning
     premiereGeneration(listeAttenteGrandePiste, listeAttentePetitePiste, arguments->mutexAvions.mesAvions);
+
+    printf("Première génération terminée\n");fflush(stdout);
 
     // PREMIERS LANCEMENTS
 

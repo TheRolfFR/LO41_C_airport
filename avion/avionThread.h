@@ -25,21 +25,24 @@ void *avionThread(void *arg) {
     argument_thread_avion *arguments = (argument_thread_avion *) arg;
     argument_thread_struct *argumentsThread = arguments->argumentsThread;
 
+    pthread_mutex_t* mutex = &argumentsThread->mutexAvions.mutex;
+
+
     // on attend l'accès à la ressource
-    pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);
+    pthread_mutex_lock(mutex);
 
     int index = arguments->index;
 
     avion *a = avionCreer(index);
-    argumentsThread->mutexAvions.mesAvions[arguments->index] = a;
+    argumentsThread->mutexAvions.mesAvions[index] = a;
     argumentsThread->mutexAvions.nbAvionsPrets++;
-    /*pthread_mutex_unlock(&argumentsThread->mutexAvions.mutex);
+    /*pthread_mutex_unlock(mutex);
 
     // boucle infinie de l'avion
-    pthread_mutex_lock(&argumentsThread->mutexAvions.mutex);*/
+    pthread_mutex_lock(mutex);*/
     while (true) {
         // en premier on attend d'être autorisé
-        pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[index], &argumentsThread->mutexAvions.mutex);
+        pthread_cond_wait(&argumentsThread->mutexAvions.conditionsAvion[index], mutex);
 
         // faire l'action (décollage / atterrissage)
         sleep(ACTION_DUREE);
@@ -58,7 +61,7 @@ void *avionThread(void *arg) {
         pthread_cond_signal(&argumentsThread->mutexAvions.avionQuelconque);
 
         // on libère la ressource critique
-        pthread_mutex_unlock(&argumentsThread->mutexAvions.mutex);
+        pthread_mutex_unlock(mutex);
     }
 
     avionDetruire(a);

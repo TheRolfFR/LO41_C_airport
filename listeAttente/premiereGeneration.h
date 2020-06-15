@@ -20,7 +20,7 @@ void premiereGeneration(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVI
 
     for(int i = 0; i < NB_AVIONS; ++i) {
         // on regarde quelle pistes sont compatibles
-        printf("%p\n", listeAvions[i]);
+        printf("\n%p\n", listeAvions[i]);
         fflush(stdout);
         grandAvion = listeAvions[i]->grosAvion;
 
@@ -46,7 +46,7 @@ void premiereGeneration(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVI
             int k = 0;
 
             bool petitMeilleur, grandMeileur;
-            while ((grandeListe[j] != NULL || petiteListe[k] == NULL) && (petitMeilleur = avionComparer(listeAvions[i], grandeListe[j])) >= 1 && (grandMeileur = avionComparer(listeAvions[i], petiteListe[k])) >= 1) {
+            while (grandeListe[j] != NULL && petiteListe[k] == NULL && (petitMeilleur = avionComparer(listeAvions[i], grandeListe[j])) >= 1 && (grandMeileur = avionComparer(listeAvions[i], petiteListe[k])) >= 1) {
 
                 // on avance tant qu'on peut
                 if(grandeListe[j] != NULL)

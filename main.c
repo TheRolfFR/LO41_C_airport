@@ -101,8 +101,10 @@ int main (int argc, char *argv[]) {
     // démarrer tous les threads des avions
     for(int i = 0; i < NB_AVIONS; ++i) {
         mesAvions[i].fonction = avionThread;
+        pthread_mutex_lock(&mesArguments.mutexAvions.mutex);
         argumentsMonAvion.index = i;
         lancerThread(&mesAvions[i], (void *) &argumentsMonAvion);
+        pthread_mutex_unlock(&mesArguments.mutexAvions.mutex);
     }
 
     // démarrer le thread du contrôleur
