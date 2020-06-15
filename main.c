@@ -14,6 +14,7 @@
 #include "tarmac/tarmacAfficher.h"
 #include "affichage/affichage_fonction_variable.h"
 #include "tarmac/tarmacAjouterAffichage.h"
+#include "arguments/argumentAvionCopier.h"
 #include <signal.h>
 
 // j'ai besoin de quelques choses :
@@ -22,8 +23,8 @@
 // le mutex général est dedans mais pas besoin de l'initialiser
 argument_thread_struct mesArguments;
 
-// la structure des aguments d'avions
-argument_thread_avion argumentsMonAvion;
+// la structure des arguments d'avions
+argument_thread_avion arguments[NB_AVIONS];
 
 // il nous fout des structures de thread pour les avions
 thread_struct mesAvions[NB_AVIONS];
@@ -66,14 +67,14 @@ int main (int argc, char *argv[]) {
     initAleatoire(); // on initialise l'aléatoire
 
     // on initialiser les mutex et les conditions
-    mesArguments.mutexAvions.mutex = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    /*mesArguments.mutexAvions.mutex = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
     mesArguments.mutexAvions.avionsPrets = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
     mesArguments.mutexAvions.avionQuelconque = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
     for(int i = 0; i < NB_AVIONS; ++i) {
         mesArguments.mutexAvions.conditionsAvion[i] = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
     }
     mesArguments.mutexAvions.atterissageForce = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
-    mesArguments.mutexAvions.nbAvionsPrets = 0;
+    mesArguments.mutexAvions.nbAvionsPrets = 0;*/
 
     // initialiser les arguments généraux
     tarmacInitialiser(&mesArguments.monTarmac);
@@ -95,16 +96,13 @@ int main (int argc, char *argv[]) {
     pisteAfficher(&mesArguments.mesPistes[1]);
     tarmacAfficher(&mesArguments.monTarmac);
 
-    // on met les arguments généraux dans les arguments pour les avions
-    argumentsMonAvion.argumentsThread = &mesArguments;
+    arguments[0].argumentsThread = &mesArguments;
 
     // démarrer tous les threads des avions
     for(int i = 0; i < NB_AVIONS; ++i) {
-        mesAvions[i].fonction = avionThread;
-        pthread_mutex_lock(&mesArguments.mutexAvions.mutex);
-        argumentsMonAvion.index = i;
-        lancerThread(&mesAvions[i], (void *) &argumentsMonAvion);
-        pthread_mutex_unlock(&mesArguments.mutexAvions.mutex);
+        argumentAvionCopier(&arguments[0], &arguments[i]);
+        arguments[i].index = i;
+        lancerThread(&mesAvions[i], (void *) &arguments[i]);
     }
 
     // démarrer le thread du contrôleur

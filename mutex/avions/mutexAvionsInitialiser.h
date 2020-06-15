@@ -14,9 +14,6 @@
 void mutexAvionsInitialiser(mutex_avions_struct *m) {
     if(m == NULL)
         return;
-
-    // on libère l'accès au mutex
-    pthread_mutex_unlock(&m->mutex);
 }
 
 #endif //LO41_PROJET_MUTEXAVIONSINITIALISER_H

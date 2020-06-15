@@ -3,5 +3,5 @@ project(lo41_projet C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
-add_executable(lo41_project main.c)
+add_executable(lo41_project main.c arguments/argumentAvionCopier.h)
 target_link_libraries(lo41_project m)
