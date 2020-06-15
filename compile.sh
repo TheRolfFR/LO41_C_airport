@@ -1,1 +1,1 @@
-gcc main.c -o main -lm -pthread
+gcc main.c -o main -lm -lpthread
