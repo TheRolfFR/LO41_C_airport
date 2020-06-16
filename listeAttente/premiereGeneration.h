@@ -31,7 +31,7 @@ void premiereGeneration(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVI
                 ++j; // on avance
             }
 
-            if(j != longueurGrande) {
+            if(grandeListe[j] != NULL) {
                 // on est arrivé à la fin
                 // on décale les autres et on insère le celui-ci
                 listeAttenteDecalerTard(j, grandeListe, longueurGrande);
@@ -58,12 +58,12 @@ void premiereGeneration(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVI
             }
 
             // cas le plus défavorable : les deux sont à la fin, on met sur la plut petite liste
-            if(j == longueurGrande && k == longueurPetite) {
+            if(grandeListe[j] == NULL && petiteListe[k] == NULL) {
                 if(longueurGrande < longueurPetite) {
                     grandeListe[j] = listeAvions[i];
                     ++longueurGrande;
                 } else {
-                    grandeListe[j] = listeAvions[i];
+                    petiteListe[k] = listeAvions[i];
                     ++longueurPetite;
                 }
             } else {
