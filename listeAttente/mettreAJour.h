@@ -11,6 +11,7 @@
 #include "../piste/pisteCompatible.h"
 #include "../avion/avionDansListe.h"
 #include "listeAttenteDecalerTot.h"
+#include "listeResserrer.h"
 #include <string.h>
 
 void traiterAvion(avion *maPiste[NB_AVIONS], avion *lAutrePiste[NB_AVIONS], avion* a, bool grandePiste) {
@@ -96,6 +97,9 @@ void mettreAJour(avion *grandeListe[NB_AVIONS], avion *petiteListe[NB_AVIONS], a
 
         ++i;
     }
+
+    listeAttenteResserer(grandeListe);
+    listeAttenteResserer(petiteListe);
 }
 
 #endif //LO41_PROJET_METTREAJOUR_H

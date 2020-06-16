@@ -14,7 +14,7 @@ void listeAttenteDecalerTot(int j, avion **liste, int longueur) {
         liste[i] = liste[i+1];
 
         if(nul == -1 && liste[i] == NULL) {
-            nul = i;
+            nul = i-1;
         }
     }
     liste[nul] = NULL;
